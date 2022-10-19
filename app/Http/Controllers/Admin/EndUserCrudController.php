@@ -43,11 +43,7 @@ class EndUserCrudController extends CrudController
         CRUD::column('name');
         CRUD::column('username');
         CRUD::column('email');
-        CRUD::column('email_verified_at');
         CRUD::column('password');
-        CRUD::column('remember_token');
-        CRUD::column('created_at');
-        CRUD::column('updated_at');
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -70,9 +66,7 @@ class EndUserCrudController extends CrudController
         CRUD::field('name');
         CRUD::field('username');
         CRUD::field('email');
-        CRUD::field('email_verified_at');
         CRUD::field('password');
-        CRUD::field('remember_token');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
