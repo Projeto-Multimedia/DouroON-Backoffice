@@ -10,4 +10,14 @@ class EndUserController extends Controller
     {
         return EndUser::get();
     }
+
+    public function register()
+    {
+        return EndUser::create([
+            'email' => request('email'),
+            'username' => request('username'),
+            'name' => request('name'),
+            'password' => request('password'),
+        ]);
+    }
 }
