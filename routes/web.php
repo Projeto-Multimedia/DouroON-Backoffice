@@ -13,5 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 //redirect to laravel backpack login page
+
 Route::redirect('/', '/admin');
 

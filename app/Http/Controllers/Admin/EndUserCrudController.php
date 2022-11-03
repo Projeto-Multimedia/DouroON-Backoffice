@@ -43,7 +43,6 @@ class EndUserCrudController extends CrudController
         CRUD::column('name');
         CRUD::column('username');
         CRUD::column('email');
-        CRUD::column('password');
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
