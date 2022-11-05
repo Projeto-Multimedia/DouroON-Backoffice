@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\EndUser;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class EndUserController extends Controller
 {
@@ -17,7 +19,8 @@ class EndUserController extends Controller
             'email' => request('email'),
             'username' => request('username'),
             'name' => request('name'),
-            'password' => request('password'),
+            'password' => Hash::make(request('password')),
+            'token' => Hash::make(Str::random(16)),
         ]);
     }
 }
