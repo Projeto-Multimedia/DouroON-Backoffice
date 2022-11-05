@@ -43,7 +43,7 @@ class EndUserController extends Controller
         return $user;
     }
 
-    public function User()
+    public function UserLogIn()
     {
             //sign in request username and password
             $username = request('username');
