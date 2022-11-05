@@ -42,4 +42,37 @@ class EndUserController extends Controller
         $user = EndUser::find($userId);
         return $user;
     }
+
+    public function User()
+    {
+            //sign in request username and password
+            $username = request('username');
+            $password = request('password');
+            //check if username and password is correct
+            $user = DB::table('end_users')->where('username', $username)->first();
+            if ($user) {
+                if (Hash::check($password, $user->password)) {
+                    //if correct return user data
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Login Success',
+                        'data' => $user
+                    ], 200);
+                } else {
+                    //if not correct return error message
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Login Failed, Wrong Password',
+                        'data' => ''
+                    ], 401);
+                }
+            } else {
+                //if not correct return error message
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Login Failed, Username not found',
+                    'data' => ''
+                ], 401);
+            }
+    }
 }
