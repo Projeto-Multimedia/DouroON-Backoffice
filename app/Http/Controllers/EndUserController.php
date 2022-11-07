@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\EndUser;
-use Illuminate\Support\Str;
+use DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Str;
 
 class EndUserController extends Controller
 {
@@ -45,34 +45,32 @@ class EndUserController extends Controller
 
     public function UserLogIn()
     {
-            //sign in request username and password
-            $username = request('username');
-            $password = request('password');
-            //check if username and password is correct
-            $user = DB::table('end_users')->where('username', $username)->first();
-            if ($user) {
-                if (Hash::check($password, $user->password)) {
-                    //if correct return user data
-                    return response()->json([
-                        'status' => 'success',
-                        'message' => 'Login Success',
-                        'data' => $user
-                    ], 200);
-                } else {
-                    //if not correct return error message
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Login Failed, Wrong Password',
-                        'data' => ''
-                    ], 401);
-                }
+        //sign in request username and password
+        $username = request('username');
+        $password = request('password');
+        //check if username and password is correct
+        $user = DB::table('end_users')->where('username', $username)->first();
+        if ($user) {
+            if (Hash::check($password, $user->password)) {
+                //if correct return user data
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Login success.',
+                    'data' => $user,
+                ], 200);
             } else {
                 //if not correct return error message
                 return response()->json([
-                    'status' => 'error',
-                    'message' => 'Login Failed, Username not found',
-                    'data' => ''
+                    'status' => 401,
+                    'message' => 'Login failed, wrong password.',
                 ], 401);
             }
+        } else {
+            //if not correct return error message
+            return response()->json([
+                'status' => 401,
+                'message' => 'Login failed, username not found.',
+            ], 401);
+        }
     }
 }
