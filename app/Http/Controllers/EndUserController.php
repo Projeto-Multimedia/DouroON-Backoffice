@@ -17,14 +17,34 @@ class EndUserController extends Controller
     }
 
     public function register()
-    {
-        return EndUser::create([
-            'email' => request('email'),
-            'username' => request('username'),
-            'name' => request('name'),
-            'password' => Hash::make(request('password')),
-            'token' => Hash::make(Str::random(16)),
+    { 
+        $validator = Validator::make(request()->all(), [
+            'name' => 'required|min:8|max:70',
+            'email' => 'required|email|unique:end_users',
+            'password' => 'required|min:9|max:15',
+            'username' => 'required|min:6|max:20|unique:end_users',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors()->first(),
+            ], 400);
+        }
+
+        $user = EndUser::create([
+            'name' => request('name'),
+            'email' => request('email'),
+            'password' => Hash::make(request('password')),
+            'username' => request('username'),
+            'token' => Str::random(60),
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User created successfully',
+            'data' => $user,
+        ], 201);
     }
 
     public function getUser(Request $request)
