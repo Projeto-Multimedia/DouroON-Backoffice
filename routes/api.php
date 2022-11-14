@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EndUserController;
+use App\Http\Controllers\UserPostsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,4 +25,11 @@ Route::group(['prefix' => 'end-users'], function () {
     Route::get('/', [EndUserController::class, 'index']);
     Route::post('/login', [EndUserController::class, 'UserLogIn']);
     Route::get('/{id}', [EndUserController::class, 'getUser']);
+});
+
+Route::group(['prefix' => 'user-posts'], function () {
+    Route::get('/', [UserPostsController::class, 'index']);
+    Route::get('/{id}', [UserPostsController::class, 'getPost']);
+    Route::post('/create/{id}', [UserPostsController::class, 'createPost']);
+
 });

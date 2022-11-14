@@ -10,3 +10,5 @@
     </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('end-user') }}"><i class="las la-user-secret"></i> End users</a></li>
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('user-post') }}"><i class="nav-icon la la-question"></i> User posts</a></li>
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('company-post') }}"><i class="nav-icon la la-question"></i> Company posts</a></li>

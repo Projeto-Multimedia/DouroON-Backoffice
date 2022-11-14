@@ -4,9 +4,8 @@ namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\UserPost;
 
-class EndUser extends Model
+class CompanyPost extends Model
 {
     use CrudTrait;
 
@@ -16,7 +15,7 @@ class EndUser extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'end_users';
+    protected $table = 'company_posts';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
@@ -35,19 +34,6 @@ class EndUser extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-
-     
-     //Get the posts for the user.
-    public function posts()
-    {
-        return $this->hasMany(UserPost::class);
-    }
-
-    //Get posts by end user id
-    public function EndUserPosts($id)
-    {
-        return $this->posts()->where('enduser_id', $id)->get();
-    }
 
     /*
     |--------------------------------------------------------------------------
