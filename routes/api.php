@@ -30,6 +30,6 @@ Route::group(['prefix' => 'end-users'], function () {
 Route::group(['prefix' => 'user-posts'], function () {
     Route::get('/', [UserPostsController::class, 'index']);
     Route::get('/{id}', [UserPostsController::class, 'getPost']);
-    Route::post('/create/{id}', [UserPostsController::class, 'createPost']);
+    Route::post('/create/{user_id}', [UserPostsController::class, 'createPost']);
 
 });

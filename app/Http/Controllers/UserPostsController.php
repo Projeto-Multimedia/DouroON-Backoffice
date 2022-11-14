@@ -21,7 +21,7 @@ class UserPostsController extends Controller
         return UserPost::where('id', $id)->get();
     }
 
-    public function createPost(Request $request, $id)
+    public function createPost(Request $request, $user_id)
     {
         $validator = Validator::make($request->all(), [
             'image' => 'required|string|max:255',
@@ -37,7 +37,7 @@ class UserPostsController extends Controller
             'image' => $request->get('image'),
             'description' => $request->get('description'),
             'location' => $request->get('location'),
-            'enduser_id' => $id,
+            'enduser_id' => $user_id,
         ]);
 
         return response()->json($post, 201);
