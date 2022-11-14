@@ -42,5 +42,32 @@ class UserPostsController extends Controller
 
         return response()->json($post, 201);
     }
-    
+
+    public function updatePost(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+        
+        $post = UserPost::where('id', $id)->first();
+
+        if ($post) {
+            $post->update([
+                'image' => $request->get('image'),
+                'description' => $request->get('description'),
+                'location' => $request->get('location'),
+            ]);
+        }
+        else {
+            return response()->json(['message' => 'Post not found'], 404);
+        }
+
+        return response()->json($post, 201);
+    }
 }
