@@ -40,7 +40,11 @@ class CompanyPostsController extends Controller
             'enduser_id' => $user_id,
         ]);
 
-        return response()->json($post, 201);
+        return response()->json([
+            'status' => 201,
+            'message' => 'Post created successfully',
+            'data' => $post,
+        ], 201); 
     }
 
     public function updatePost(Request $request, $id)
@@ -68,7 +72,11 @@ class CompanyPostsController extends Controller
             return response()->json(['message' => 'Post not found'], 404);
         }
 
-        return response()->json($post, 201);
+        return response()->json([
+            'status' => 201,
+            'message' => 'Post updated successfully',
+            'data' => $post,
+        ], 201); 
     }
     
 }
