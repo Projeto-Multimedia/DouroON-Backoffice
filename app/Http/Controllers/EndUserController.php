@@ -109,26 +109,57 @@ class EndUserController extends Controller
 
         $user = EndUser::find($userId);
 
-        $validator = Validator::make(request()->all(), [
-                'name' => 'required|min:8|max:70',
-                'username' => 'required|min:6|max:20|unique:end_users,username,'.$user->id,
-            ]);
+        if (request('avatar') != null) {
+            $user->avatar = request('avatar');
+        }
 
-        if ($validator->fails()) {
+        if (request('name') != null) {
+
+            $validator = Validator::make(request()->all(), [
+                'name' => 'min:8|max:70',
+            ]);
+             
+            if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
                     'message' => $validator->errors()->first(),
                 ], 400);
+            }
+
+            $user->name = request('name');
         }
 
-        $user->update([
-            'avatar' => request('avatar'),
-            'name' => request('name'),
-            'username' => request('username'),
-        ]);
+        if (request('username') != null) {
+
+            $validator = Validator::make(request()->all(), [
+                'username' => 'min:6|max:20|unique:end_users,username,'.$user->id,
+            ]);
+
+            
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()->first(),
+                ], 400);
+            }
+
+            $userCheck = DB::table('end_users')->where('username', request('username'))->first();
+            if ($userCheck) {
+                if ($userCheck->id != $user->id) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Username already taken.',
+                    ], 400);
+                }
+            }
+
+            $user->username = request('username');
+        }
+
+        $user->save();
 
         return response()->json([
-            'status' => 200,
+            'status' => 'success',
             'message' => 'User updated successfully',
             'data' => $user,
         ], 200);
