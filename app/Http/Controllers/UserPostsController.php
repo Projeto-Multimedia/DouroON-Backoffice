@@ -77,6 +77,23 @@ class UserPostsController extends Controller
             'message' => 'Post updated successfully',
             'data' => $post,
         ], 201); 
-        
     }
+
+    public function deletePost($id)
+    {
+        $post = UserPost::where('id', $id)->first();
+
+        if ($post) {
+            $post->delete();
+        }
+        else {
+            return response()->json(['message' => 'Post not found'], 404);
+        }
+
+        return response()->json([
+            'status' => 201,
+            'message' => 'Post deleted successfully',
+            'data' => $post,
+        ], 201); 
+    }   
 }

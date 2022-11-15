@@ -95,8 +95,6 @@ class EndUserController extends Controller
         }
     }
 
-    //update user data
-
     public function updateUserData(Request $request)
     {
         $userId = $request->route('id');
