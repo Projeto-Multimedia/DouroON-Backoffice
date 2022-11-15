@@ -111,7 +111,6 @@ class EndUserController extends Controller
 
         $validator = Validator::make(request()->all(), [
                 'name' => 'required|min:8|max:70',
-                'email' => 'required|email|unique:end_users,email,'.$user->id,
                 'username' => 'required|min:6|max:20|unique:end_users,username,'.$user->id,
             ]);
 
@@ -125,8 +124,6 @@ class EndUserController extends Controller
         $user->update([
             'avatar' => request('avatar'),
             'name' => request('name'),
-            'email' => request('email'),
-            'password' => Hash::make(request('password')),
             'username' => request('username'),
         ]);
 
