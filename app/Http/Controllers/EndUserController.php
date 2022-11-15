@@ -33,6 +33,7 @@ class EndUserController extends Controller
         }
 
         $user = EndUser::create([
+            'avatar' => request('avatar'),
             'name' => request('name'),
             'email' => request('email'),
             'password' => Hash::make(request('password')),
@@ -92,5 +93,37 @@ class EndUserController extends Controller
                 'message' => 'Login failed, username not found.',
             ], 401);
         }
+    }
+
+    //update user data
+
+    public function updateUserData(Request $request)
+    {
+        $userId = $request->route('id');
+
+        $validation = Validator::make(['id' => $userId], [
+            'id' => 'required|exists:end_users,id',
+        ]);
+
+        if ($validation->fails()) {
+            return $validation->errors();
+        }
+
+        $user = EndUser::find($userId);
+
+        $user->update([
+            'avatar' => request('avatar'),
+            'name' => request('name'),
+            'email' => request('email'),
+            'password' => Hash::make(request('password')),
+            'username' => request('username'),
+        ]);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'User updated successfully',
+            'data' => $user,
+        ], 200);
+
     }
 }
