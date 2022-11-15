@@ -64,7 +64,7 @@ class EndUserController extends Controller
         return $user;
     }
 
-    public function UserLogIn()
+    public function userLogIn()
     {
         //sign in request username and password
         $username = request('username');
@@ -108,6 +108,19 @@ class EndUserController extends Controller
         }
 
         $user = EndUser::find($userId);
+
+        $validator = Validator::make(request()->all(), [
+                'name' => 'required|min:8|max:70',
+                'email' => 'required|email|unique:end_users,email,'.$user->id,
+                'username' => 'required|min:6|max:20|unique:end_users,username,'.$user->id,
+            ]);
+
+        if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()->first(),
+                ], 400);
+        }
 
         $user->update([
             'avatar' => request('avatar'),

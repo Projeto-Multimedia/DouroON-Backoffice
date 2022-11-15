@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'end-users'], function () {
     Route::post('/register', [EndUserController::class, 'register']);
     Route::get('/', [EndUserController::class, 'index']);
-    Route::post('/login', [EndUserController::class, 'UserLogIn']);
+    Route::post('/login', [EndUserController::class, 'userLogIn']);
     Route::get('/{id}', [EndUserController::class, 'getUser']);
     Route::post('/{id}/edit', [EndUserController::class, 'updateUserData']);
 });
