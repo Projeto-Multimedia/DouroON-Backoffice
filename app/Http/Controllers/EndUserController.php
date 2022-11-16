@@ -110,7 +110,25 @@ class EndUserController extends Controller
         $user = EndUser::find($userId);
 
         if (request('avatar') != null) {
-            $user->avatar = request('avatar');
+
+            
+            $image = $request->file('avatar');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images'), $imageName);
+
+            
+            $validator = Validator::make($request->all(), [
+                'avatar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()->first(),
+                ], 400);
+            }
+
+            $user->avatar = $imageName;
         }
 
         if (request('name') != null) {
@@ -118,7 +136,7 @@ class EndUserController extends Controller
             $validator = Validator::make(request()->all(), [
                 'name' => 'min:8|max:70',
             ]);
-             
+
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
@@ -164,5 +182,45 @@ class EndUserController extends Controller
             'data' => $user,
         ], 200);
 
+    }
+
+    public function uploadImage(Request $request)
+    {
+
+        $userId = $request->route('id');
+
+        $validation = Validator::make(['id' => $userId], [
+            'id' => 'required|exists:end_users,id',
+        ]);
+
+        if ($validation->fails()) {
+            return $validation->errors();
+        }
+
+        $user = EndUser::find($userId);
+
+        $image = $request->file('avatar');
+        $imageName = time() . '.' . $image->getClientOriginalExtension();
+        $image->move(public_path('images'), $imageName);
+
+        $validator = Validator::make($request->all(), [
+            'avatar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors()->first(),
+            ], 400);
+        }
+
+        $user->avatar = $imageName;
+        $user->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Image uploaded successfully',
+            'data' => $user,
+        ], 200);
     }
 }
