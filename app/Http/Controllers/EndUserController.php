@@ -111,25 +111,29 @@ class EndUserController extends Controller
 
         if (request('avatar') != null) {
             
-            $image = $request->file('avatar');
+            
+            $user->avatar = request('avatar');
 
-            $validator = Validator::make($request->all(), [
-                'avatar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            ]);
 
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => $validator->errors()->first(),
-                ], 400);
-            }
+            // $image = $request->file('avatar');
 
-            if($image != null){
-                $image_name = time() . '.' . $image->getClientOriginalExtension();
-                $destinationPath = public_path('/images');
-                $image->move($destinationPath, $image_name);
-                $user->avatar = $image_name;
-            }
+            // // $validator = Validator::make($request->all(), [
+            // //     'avatar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            // // ]);
+
+            // // if ($validator->fails()) {
+            // //     return response()->json([
+            // //         'status' => 'error',
+            // //         'message' => $validator->errors()->first(),
+            // //     ], 400);
+            // // }
+
+            // if($image != null){
+            //     $image_name = time() . '.' . $image->getClientOriginalExtension();
+            //     $destinationPath = public_path('/images');
+            //     $image->move($destinationPath, $image_name);
+            //     $user->avatar = $image_name;
+            // }
         }
 
         if (request('name') != null) {
