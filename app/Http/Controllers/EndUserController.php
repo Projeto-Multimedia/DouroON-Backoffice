@@ -110,13 +110,9 @@ class EndUserController extends Controller
         $user = EndUser::find($userId);
 
         if (request('avatar') != null) {
-
             
             $image = $request->file('avatar');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images'), $imageName);
 
-            
             $validator = Validator::make($request->all(), [
                 'avatar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
@@ -128,7 +124,12 @@ class EndUserController extends Controller
                 ], 400);
             }
 
-            $user->avatar = $imageName;
+            if($image != null){
+                $image_name = time() . '.' . $image->getClientOriginalExtension();
+                $destinationPath = public_path('/images');
+                $image->move($destinationPath, $image_name);
+                $user->avatar = $image_name;
+            }
         }
 
         if (request('name') != null) {
