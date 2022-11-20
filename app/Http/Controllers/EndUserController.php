@@ -36,9 +36,8 @@ class EndUserController extends Controller
             'avatar' => request('avatar'),
             'name' => request('name'),
             'email' => request('email'),
-            'password' => Hash::make(request('password')),
+            'password' => request('password'),
             'username' => request('username'),
-            'token' => Str::random(60),
         ]);
 
         return response()->json([
