@@ -28,6 +28,7 @@ Route::group(['prefix' => 'end-users'], function () {
     Route::get('/{id}', [EndUserController::class, 'getUser']);
     Route::post('/{id}/edit', [EndUserController::class, 'updateUserData']);
     Route::post('/{id}/upload', [EndUserController::class, 'uploadImage']);
+    Route::post('/{id}/delete', [EndUserController::class, 'deleteUser']);
 });
 
 Route::group(['prefix' => 'user-posts'], function () {

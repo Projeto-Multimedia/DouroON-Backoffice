@@ -183,13 +183,35 @@ class EndUserController extends Controller
                 $user->avatar = $img;
             
 
-        $user->save();
+                $user->save();
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Image uploaded successfully',
+                    'data' => $user,
+                ], 200);
+            }
+    }
+
+    public function deleteUser(Request $request)
+    {
+        $userId = $request->route('id');
+
+        $validation = Validator::make(['id' => $userId], [
+            'id' => 'required|exists:end_users,id',
+        ]);
+
+        if ($validation->fails()) {
+            return $validation->errors();
+        }
+
+        $user = EndUser::find($userId);
+
+        $user->delete();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Image uploaded successfully',
-            'data' => $user,
+            'message' => 'User deleted successfully',
         ], 200);
-    }
     }
 }
