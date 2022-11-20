@@ -86,6 +86,12 @@ class EndUserCrudController extends CrudController
         
         CRUD::field('token')->type('hidden');
 
+        CRUD::addField([
+            'name' => 'profile',
+            'value' => 'company',
+            'type' => 'hidden',
+        ]);
+
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

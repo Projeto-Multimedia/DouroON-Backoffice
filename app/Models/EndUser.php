@@ -28,6 +28,7 @@ class EndUser extends Model
         'email',
         'avatar',
         'password',
+        'profile',
     ];
     // protected $hidden = [];
     // protected $dates = [];
@@ -79,6 +80,12 @@ class EndUser extends Model
     {
         return $this->posts()->where('enduser_id', $id)->get();
     }
+
+    public function setIsBrandAttribute($value)
+    {
+        $this->attributes['profile'] = 'company';
+    }
+
 
     /*
     |--------------------------------------------------------------------------
