@@ -72,14 +72,20 @@ class EndUserCrudController extends CrudController
             'label' => 'Avatar',
             'type' => 'upload',
             'upload' => true,
-            // 'crop' => true,
-            // 'aspect_ratio' => 1,
             'disk' => 'uploads',
         ]);
         CRUD::field('name');
         CRUD::field('username');
         CRUD::field('email');
-        CRUD::field('password');
+       
+        CRUD::addField([
+            'name' => 'password',
+            'label' => 'Password',
+            'type' => 'password',
+        ]);
+        
+        CRUD::field('token')->type('hidden');
+
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

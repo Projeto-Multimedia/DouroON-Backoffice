@@ -5,6 +5,8 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\UserPost;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class EndUser extends Model
 {
@@ -43,6 +45,21 @@ class EndUser extends Model
 
         $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
 
+    }
+
+    //Generate random token when creating user
+    public static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $model->token = Str::random(60);
+        });
+    }
+
+    //hash password when creating user
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = Hash::make($value);
     }
     /*
     |--------------------------------------------------------------------------
