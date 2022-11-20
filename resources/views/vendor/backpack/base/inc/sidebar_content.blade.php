@@ -14,7 +14,7 @@
     <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-sitemap"></i> App Users</a>
     <ul class="nav-dropdown-items">
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('end-user') }}"><i class="las la-user-secret"></i> End users</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('end-user') }}"><i class="la la-building"></i> Companies</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('companies') }}"><i class="la la-building"></i> Companies</a></li>
     </ul>
 </li>
 
