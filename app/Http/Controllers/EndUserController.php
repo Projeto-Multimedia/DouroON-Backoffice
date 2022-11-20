@@ -109,33 +109,6 @@ class EndUserController extends Controller
 
         $user = EndUser::find($userId);
 
-        if (request('avatar') != null) {
-            
-            
-            $user->avatar = request('avatar');
-
-
-            // $image = $request->file('avatar');
-
-            // // $validator = Validator::make($request->all(), [
-            // //     'avatar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            // // ]);
-
-            // // if ($validator->fails()) {
-            // //     return response()->json([
-            // //         'status' => 'error',
-            // //         'message' => $validator->errors()->first(),
-            // //     ], 400);
-            // // }
-
-            // if($image != null){
-            //     $image_name = time() . '.' . $image->getClientOriginalExtension();
-            //     $destinationPath = public_path('/images');
-            //     $image->move($destinationPath, $image_name);
-            //     $user->avatar = $image_name;
-            // }
-        }
-
         if (request('name') != null) {
 
             $validator = Validator::make(request()->all(), [
@@ -204,22 +177,13 @@ class EndUserController extends Controller
 
         $user = EndUser::find($userId);
 
-        $image = $request->file('avatar');
-        $imageName = time() . '.' . $image->getClientOriginalExtension();
-        $image->move(public_path('images'), $imageName);
+            if($request->hasFile('avatar'))
+            {
+                $img = 'uploads/avatar/' . time() . '.' . $request->file('avatar')->extension();
+                $request->file('avatar')->move(public_path('uploads/avatar'), $img);
+                $user->avatar = $img;
+            
 
-        $validator = Validator::make($request->all(), [
-            'avatar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $validator->errors()->first(),
-            ], 400);
-        }
-
-        $user->avatar = $imageName;
         $user->save();
 
         return response()->json([
@@ -227,5 +191,6 @@ class EndUserController extends Controller
             'message' => 'Image uploaded successfully',
             'data' => $user,
         ], 200);
+    }
     }
 }
