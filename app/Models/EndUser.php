@@ -81,10 +81,6 @@ class EndUser extends Model
         return $this->posts()->where('enduser_id', $id)->get();
     }
 
-    public function setIsBrandAttribute($value)
-    {
-        $this->attributes['profile'] = 'company';
-    }
 
 
     /*
