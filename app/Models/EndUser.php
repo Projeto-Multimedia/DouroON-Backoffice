@@ -20,7 +20,13 @@ class EndUser extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    // protected $fillable = [];
+    protected $fillable = [
+        'name', 
+        'username',
+        'email',
+        'avatar',
+        'password',
+    ];
     // protected $hidden = [];
     // protected $dates = [];
 
@@ -29,7 +35,15 @@ class EndUser extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+    public function setAvatarAttribute($value)
+    {
+        $attribute_name = "avatar";
+        $disk = "uploads";
+        $destination_path ="/uploads/avatar";
 
+        $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
+
+    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

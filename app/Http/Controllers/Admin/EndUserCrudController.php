@@ -39,7 +39,13 @@ class EndUserCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::column('avatar');
+        CRUD::addColumn([
+            'name' => 'avatar',
+            'label' => 'Avatar',
+            'type' => 'image',
+            'height' => '40px',
+            'width'  => '40px',
+        ]);
         CRUD::column('name');
         CRUD::column('username');
         CRUD::column('email');
@@ -61,7 +67,15 @@ class EndUserCrudController extends CrudController
     {
         CRUD::setValidation(EndUserRequest::class);
 
-        CRUD::field('avatar');
+        CRUD::addField([
+            'name' => 'avatar',
+            'label' => 'Avatar',
+            'type' => 'upload',
+            'upload' => true,
+            // 'crop' => true,
+            // 'aspect_ratio' => 1,
+            'disk' => 'uploads',
+        ]);
         CRUD::field('name');
         CRUD::field('username');
         CRUD::field('email');
