@@ -23,6 +23,7 @@
     <ul class="nav-dropdown-items">
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('user-post') }}"><i class="nav-icon las la-envelope"></i> User posts</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('company-post') }}"><i class="nav-icon las la-envelope-open-text"></i> Company posts</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('approve-post') }}"><i class="nav-icon las la-envelope"></i> Approve Posts</a></li>
     </ul>
 </li>
 

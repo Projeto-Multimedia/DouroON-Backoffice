@@ -11,7 +11,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class UserPostCrudController extends CrudController
+class ApproveUserPostCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -27,9 +27,10 @@ class UserPostCrudController extends CrudController
     public function setup()
     {
         CRUD::setModel(\App\Models\UserPost::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/user-post');
-        CRUD::setEntityNameStrings('user post', 'user posts');
-        $this->crud->addClause('where', 'is_approved', '!=', 0);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/approve-post');
+        CRUD::setEntityNameStrings('user post', 'Approve user posts');
+        $this->crud->denyAccess('create');
+        $this->crud->addClause('where', 'is_approved', '!=', 1);
     }
 
     /**
@@ -55,6 +56,11 @@ class UserPostCrudController extends CrudController
         CRUD::column('location');
         CRUD::column('created_at');
         CRUD::column('updated_at');
+        CRUD::addColumn([
+            'name' => 'is_approved',
+            'label' => 'Approve',
+            'type' => 'check',
+        ]);
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -73,18 +79,11 @@ class UserPostCrudController extends CrudController
     {
         CRUD::setValidation(UserPostRequest::class);
 
-        //Relation field for end user
         CRUD::addField([
-            'label' => "End User",
-            'type' => 'select',
-            'name' => 'enduser_id', // the db column for the foreign key
-            'entity' => 'enduser', // the method that defines the relationship in your Model
-            'attribute' => 'name', // foreign key attribute that is shown to user
-            'model' => "App\Models\EndUser", // foreign key model
+            'name' => 'is_approved',
+            'label' => 'Approve',
+            'type' => 'checkbox',
         ]);
-        CRUD::field('image');
-        CRUD::field('description');
-        CRUD::field('location');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
