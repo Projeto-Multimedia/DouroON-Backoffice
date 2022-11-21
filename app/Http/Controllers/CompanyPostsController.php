@@ -49,8 +49,8 @@ class CompanyPostsController extends Controller
        if($request->hasFile('image')){
            
                 $img = 'uploads/companyposts/' . time() . '.' . $request->file('image')->extension();
-                $request->file('image')->move(public_path('uploads/userposts'), $img);
-                $userPost = CompanyPost::create([
+                $request->file('image')->move(public_path('uploads/CompanyPosts'), $img);
+                $CompanyPost = CompanyPost::create([
                     'enduser_id' => $userId,
                     'image' => $img,
                     'description' => request('description'),
@@ -60,7 +60,7 @@ class CompanyPostsController extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Post created successfully',
-                    'data' => $userPost,
+                    'data' => $CompanyPost,
                 ], 201);
          }
     }
@@ -76,7 +76,7 @@ class CompanyPostsController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
         
-        $post = UserPost::where('id', $id)->first();
+        $post = CompanyPost::where('id', $id)->first();
 
         if ($post) {
             $post->update([
