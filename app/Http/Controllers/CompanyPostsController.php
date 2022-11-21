@@ -50,7 +50,7 @@ class CompanyPostsController extends Controller
            
                 $img = 'uploads/companyposts/' . time() . '.' . $request->file('image')->extension();
                 $request->file('image')->move(public_path('uploads/userposts'), $img);
-                $userPost = UserPost::create([
+                $userPost = CompanyPost::create([
                     'enduser_id' => $userId,
                     'image' => $img,
                     'description' => request('description'),
