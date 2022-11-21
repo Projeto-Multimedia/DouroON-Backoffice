@@ -36,8 +36,8 @@ class UserPostsController extends Controller
 
         $validator = Validator::make(request()->all(), [
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'description' => 'string|max:255',
-            'location' => 'string|max:255',
+            'description' => 'max:255',
+            'location' => 'max:255',
         ]);
 
         if ($validator->fails()) {
@@ -70,8 +70,8 @@ class UserPostsController extends Controller
     public function updatePost(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'description' => 'string|max:255',
-            'location' => 'string|max:255',
+            'description' => 'max:255',
+            'location' => 'max:255',
         ]);
 
         if ($validator->fails()) {

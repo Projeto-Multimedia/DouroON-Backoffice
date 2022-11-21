@@ -21,49 +21,65 @@ class CompanyPostsController extends Controller
         return CompanyPost::where('id', $id)->get();
     }
 
-    public function createPost(Request $request, $user_id)
+    public function createPost(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'image' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
+        $userId = $request->route('user_id');
+
+        $validation = Validator::make(['id' => $userId], [
+            'id' => 'required|exists:end_users,id',
+        ]);
+
+        if ($validation->fails()) {
+            return $validation->errors();
+        }
+
+        $validator = Validator::make(request()->all(), [
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'description' => 'max:255',
+            'location' => 'max:255',
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors()->first(),
+            ], 400);
         }
 
-        $post = CompanyPost::create([
-            'image' => $request->get('image'),
-            'description' => $request->get('description'),
-            'location' => $request->get('location'),
-            'enduser_id' => $user_id,
-        ]);
+       if($request->hasFile('image')){
+           
+                $img = 'uploads/companyposts/' . time() . '.' . $request->file('image')->extension();
+                $request->file('image')->move(public_path('uploads/userposts'), $img);
+                $userPost = UserPost::create([
+                    'enduser_id' => $userId,
+                    'image' => $img,
+                    'description' => request('description'),
+                    'location' => request('location'),
+                ]);
 
-        return response()->json([
-            'status' => 201,
-            'message' => 'Post created successfully',
-            'data' => $post,
-        ], 201); 
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Post created successfully',
+                    'data' => $userPost,
+                ], 201);
+         }
     }
 
     public function updatePost(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'image' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
+            'description' => 'max:255',
+            'location' => 'max:255',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
         
-        $post = CompanyPost::where('id', $id)->first();
+        $post = UserPost::where('id', $id)->first();
 
         if ($post) {
             $post->update([
-                'image' => $request->get('image'),
                 'description' => $request->get('description'),
                 'location' => $request->get('location'),
             ]);
