@@ -49,8 +49,7 @@ class UserPostsController extends Controller
 
        if($request->hasFile('image')){
            
-                $img = 'uploads/userposts/' . time() . '.' . $request->file('image')->extension();
-                $request->file('image')->move(public_path('uploads/userposts'), $img);
+                $img = $request->hasFile('image');
                 $userPost = UserPost::create([
                     'enduser_id' => $userId,
                     'image' => $img,

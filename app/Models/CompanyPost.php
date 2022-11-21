@@ -28,6 +28,14 @@ class CompanyPost extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+    public function setImageAttribute($value)
+    {
+        $attribute_name = "image";
+        $disk = "uploads";
+        $destination_path ="/uploads/companyPosts";
+
+        $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -39,6 +47,12 @@ class CompanyPost extends Model
         {
             return $this->belongsTo(EndUser::class);
         }
+
+        //Get end company info
+    public function companyInfo()
+    {
+        return $this->hasOne(EndUser::class, 'id', 'enduser_id');
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES

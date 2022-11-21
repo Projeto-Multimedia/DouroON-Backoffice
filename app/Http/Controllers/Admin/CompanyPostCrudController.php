@@ -39,8 +39,17 @@ class CompanyPostCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::column('enduser_id');
-        CRUD::column('image');
+        CRUD::addColumn([
+            'label' => 'Username',
+            'name' => 'companyInfo.username',
+        ]);
+        CRUD::addColumn([
+            'name' => 'image',
+            'label' => 'Image',
+            'type' => 'image',
+            'height' => '40px',
+            'width'  => '40px',
+        ]);
         CRUD::column('description');
         CRUD::column('location');
         CRUD::column('created_at');

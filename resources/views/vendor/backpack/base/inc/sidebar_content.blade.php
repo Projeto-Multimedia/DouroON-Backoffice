@@ -21,8 +21,8 @@
 <li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-tags"></i> Posts</a>
     <ul class="nav-dropdown-items">
-        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('user-post') }}"><i class="nav-icon la la-question"></i> User posts</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('company-post') }}"><i class="nav-icon la la-question"></i> Company posts</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('user-post') }}"><i class="nav-icon las la-envelope"></i> User posts</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('company-post') }}"><i class="nav-icon las la-envelope-open-text"></i> Company posts</a></li>
     </ul>
 </li>
 

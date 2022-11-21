@@ -29,7 +29,14 @@ class UserPost extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+    public function setImageAttribute($value)
+    {
+        $attribute_name = "image";
+        $disk = "uploads";
+        $destination_path ="/uploads/userPosts";
 
+        $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
+    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS
@@ -41,6 +48,12 @@ class UserPost extends Model
         {
             return $this->belongsTo(EndUser::class);
         }
+
+    //Get end user info
+    public function userInfo()
+    {
+        return $this->hasOne(EndUser::class, 'id', 'enduser_id');
+    }
 
     /*
     |--------------------------------------------------------------------------
