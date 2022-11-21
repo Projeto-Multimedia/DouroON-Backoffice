@@ -11,7 +11,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class EndUserCrudController extends CrudController
+class CompanyCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -27,9 +27,9 @@ class EndUserCrudController extends CrudController
     public function setup()
     {
         CRUD::setModel(\App\Models\EndUser::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/end-user');
-        CRUD::setEntityNameStrings('end user', 'end users');
-        $this->crud->addClause('where', 'profile', '!=', 'company');
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/companies');
+        CRUD::setEntityNameStrings('company', 'companies');
+        $this->crud->addClause('where', 'profile', '!=', 'user');
     }
 
     /**
@@ -86,6 +86,14 @@ class EndUserCrudController extends CrudController
         ]);
         
         CRUD::field('token')->type('hidden');
+
+        CRUD::addField([
+            'name' => 'profile',
+            'value' => 'company',
+            'type' => 'hidden',
+        ]);
+
+
         /**
          * Fields can be defined using the fluent syntax or array syntax:
          * - CRUD::field('price')->type('number');

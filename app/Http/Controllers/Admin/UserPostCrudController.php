@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\EndUserRequest;
+use App\Http\Requests\UserPostRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class EndUserCrudController
+ * Class UserPostCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class EndUserCrudController extends CrudController
+class UserPostCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -26,10 +26,9 @@ class EndUserCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\EndUser::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/end-user');
-        CRUD::setEntityNameStrings('end user', 'end users');
-        $this->crud->addClause('where', 'profile', '!=', 'company');
+        CRUD::setModel(\App\Models\UserPost::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/user-post');
+        CRUD::setEntityNameStrings('user post', 'user posts');
     }
 
     /**
@@ -41,15 +40,20 @@ class EndUserCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::addColumn([
-            'name' => 'avatar',
-            'label' => 'Avatar',
+                'label' => 'Username',
+                'name' => 'userInfo.username',
+            ]);
+        CRUD::addColumn([
+            'name' => 'image',
+            'label' => 'Image',
             'type' => 'image',
             'height' => '40px',
             'width'  => '40px',
         ]);
-        CRUD::column('name');
-        CRUD::column('username');
-        CRUD::column('email');
+        CRUD::column('description');
+        CRUD::column('location');
+        CRUD::column('created_at');
+        CRUD::column('updated_at');
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -66,26 +70,21 @@ class EndUserCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(EndUserRequest::class);
+        CRUD::setValidation(UserPostRequest::class);
 
+        //Relation field for end user
         CRUD::addField([
-            'name' => 'avatar',
-            'label' => 'Avatar',
-            'type' => 'upload',
-            'upload' => true,
-            'disk' => 'uploads',
+            'label' => "End User",
+            'type' => 'select',
+            'name' => 'enduser_id', // the db column for the foreign key
+            'entity' => 'enduser', // the method that defines the relationship in your Model
+            'attribute' => 'name', // foreign key attribute that is shown to user
+            'model' => "App\Models\EndUser", // foreign key model
         ]);
-        CRUD::field('name');
-        CRUD::field('username');
-        CRUD::field('email');
-       
-        CRUD::addField([
-            'name' => 'password',
-            'label' => 'Password',
-            'type' => 'password',
-        ]);
-        
-        CRUD::field('token')->type('hidden');
+        CRUD::field('image');
+        CRUD::field('description');
+        CRUD::field('location');
+
         /**
          * Fields can be defined using the fluent syntax or array syntax:
          * - CRUD::field('price')->type('number');

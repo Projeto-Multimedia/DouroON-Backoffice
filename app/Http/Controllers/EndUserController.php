@@ -21,8 +21,8 @@ class EndUserController extends Controller
         $validator = Validator::make(request()->all(), [
             'name' => 'required|min:8|max:70',
             'email' => 'required|email|unique:end_users',
-            'password' => 'required|min:9|max:15',
-            'username' => 'required|min:6|max:20|unique:end_users',
+            'password' => 'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+            'username' => 'required|alpha_num|min:8|max:20|unique:end_users',
         ]);
 
         if ($validator->fails()) {
@@ -33,11 +33,11 @@ class EndUserController extends Controller
         }
 
         $user = EndUser::create([
+            'avatar' => request('avatar'),
             'name' => request('name'),
             'email' => request('email'),
-            'password' => Hash::make(request('password')),
+            'password' => request('password'),
             'username' => request('username'),
-            'token' => Str::random(60),
         ]);
 
         return response()->json([
@@ -63,7 +63,7 @@ class EndUserController extends Controller
         return $user;
     }
 
-    public function UserLogIn()
+    public function userLogIn()
     {
         //sign in request username and password
         $username = request('username');
@@ -92,5 +92,123 @@ class EndUserController extends Controller
                 'message' => 'Login failed, username not found.',
             ], 401);
         }
+    }
+
+    public function updateUserData(Request $request)
+    {
+        $userId = $request->route('id');
+
+        $validation = Validator::make(['id' => $userId], [
+            'id' => 'required|exists:end_users,id',
+        ]);
+
+        if ($validation->fails()) {
+            return $validation->errors();
+        }
+
+        $user = EndUser::find($userId);
+
+        if (request('name') != null) {
+
+            $validator = Validator::make(request()->all(), [
+                'name' => 'min:8|max:70',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()->first(),
+                ], 400);
+            }
+
+            $user->name = request('name');
+        }
+
+        if (request('username') != null) {
+
+            $validator = Validator::make(request()->all(), [
+                'username' => 'min:6|max:20|unique:end_users,username,'.$user->id,
+            ]);
+
+            
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()->first(),
+                ], 400);
+            }
+
+            $userCheck = DB::table('end_users')->where('username', request('username'))->first();
+            if ($userCheck) {
+                if ($userCheck->id != $user->id) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Username already taken.',
+                    ], 400);
+                }
+            }
+
+            $user->username = request('username');
+        }
+
+        $user->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User updated successfully',
+            'data' => $user,
+        ], 200);
+
+    }
+
+    public function uploadImage(Request $request)
+    {
+
+        $userId = $request->route('id');
+
+        $validation = Validator::make(['id' => $userId], [
+            'id' => 'required|exists:end_users,id',
+        ]);
+
+        if ($validation->fails()) {
+            return $validation->errors();
+        }
+
+        $user = EndUser::find($userId);
+
+            if($request->hasFile('avatar'))
+            {
+                
+                $user->avatar = $request->hasFile('avatar');
+                $user->save();
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Image uploaded successfully',
+                    'data' => $user,
+                ], 200);
+            }
+    }
+
+    public function deleteUser(Request $request)
+    {
+        $userId = $request->route('id');
+
+        $validation = Validator::make(['id' => $userId], [
+            'id' => 'required|exists:end_users,id',
+        ]);
+
+        if ($validation->fails()) {
+            return $validation->errors();
+        }
+
+        $user = EndUser::find($userId);
+
+        $user->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User deleted successfully',
+        ], 200);
     }
 }
