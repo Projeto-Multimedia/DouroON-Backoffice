@@ -50,8 +50,8 @@ class CompanyPostsController extends Controller
        if($request->hasFile('image')){
            
                 $img = 'uploads/companyposts/' . time() . '.' . $request->file('image')->extension();
-                $request->file('image')->move(public_path('uploads/CompanyPosts'), $img);
-                $CompanyPost = CompanyPost::create([
+                $request->file('image')->move(public_path('uploads/companyPosts'), $img);
+                $companyPost = CompanyPost::create([
                     'enduser_id' => $userId,
                     'image' => $img,
                     'description' => request('description'),
@@ -61,7 +61,7 @@ class CompanyPostsController extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Post created successfully',
-                    'data' => $CompanyPost,
+                    'data' => $companyPost,
                 ], 201);
          }
     }
