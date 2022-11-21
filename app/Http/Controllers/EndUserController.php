@@ -178,11 +178,8 @@ class EndUserController extends Controller
 
             if($request->hasFile('avatar'))
             {
-                $img = 'uploads/avatar/' . time() . '.' . $request->file('avatar')->extension();
-                $request->file('avatar')->move(public_path('uploads/avatar'), $img);
-                $user->avatar = $img;
-            
-
+                
+                $user->avatar = $request->hasFile('avatar');
                 $user->save();
 
                 return response()->json([
