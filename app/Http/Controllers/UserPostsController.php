@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserPost;
+use App\Models\EndUser;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -21,38 +22,56 @@ class UserPostsController extends Controller
         return UserPost::where('id', $id)->get();
     }
 
-    public function createPost(Request $request, $user_id)
+    public function createPost(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'image' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
+        $userId = $request->route('user_id');
+
+        $validation = Validator::make(['id' => $userId], [
+            'id' => 'required|exists:end_users,id',
+        ]);
+
+        if ($validation->fails()) {
+            return $validation->errors();
+        }
+
+        $validator = Validator::make(request()->all(), [
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'description' => 'string|max:255',
+            'location' => 'string|max:255',
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors()->first(),
+            ], 400);
         }
 
-        $post = UserPost::create([
-            'image' => $request->get('image'),
-            'description' => $request->get('description'),
-            'location' => $request->get('location'),
-            'enduser_id' => $user_id,
-        ]);
+       if($request->hasFile('image')){
+           
+                $img = 'uploads/userposts/' . time() . '.' . $request->file('image')->extension();
+                $request->file('image')->move(public_path('uploads/userposts'), $img);
+                $userPost = UserPost::create([
+                    'enduser_id' => $userId,
+                    'image' => $img,
+                    'description' => request('description'),
+                    'location' => request('location'),
+                ]);
 
-        return response()->json([
-            'status' => 201,
-            'message' => 'Post created successfully',
-            'data' => $post,
-        ], 201); 
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Post created successfully',
+                    'data' => $userPost,
+                ], 201);
+         }
     }
+    
 
     public function updatePost(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'image' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
+            'description' => 'string|max:255',
+            'location' => 'string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -63,7 +82,6 @@ class UserPostsController extends Controller
 
         if ($post) {
             $post->update([
-                'image' => $request->get('image'),
                 'description' => $request->get('description'),
                 'location' => $request->get('location'),
             ]);

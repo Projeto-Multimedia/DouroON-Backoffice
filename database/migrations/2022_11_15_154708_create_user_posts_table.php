@@ -13,12 +13,13 @@ class CreateUserPostsTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('user_posts');
         Schema::create('user_posts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('enduser_id')->nullable()->references('id')->on('end_users')->onDelete('cascade');
             $table->string('image');
-            $table->text('description');
-            $table->string('location');
+            $table->text('description')->nullable();
+            $table->string('location')->nullable();
             $table->timestamps();
         });
     }
