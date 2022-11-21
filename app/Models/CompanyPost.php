@@ -34,7 +34,11 @@ class CompanyPost extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-
+        //Get the end user that owns the post.
+        public function EndUser()
+        {
+            return $this->belongsTo(EndUser::class);
+        }
     /*
     |--------------------------------------------------------------------------
     | SCOPES

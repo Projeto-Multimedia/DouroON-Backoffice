@@ -49,7 +49,7 @@ class CompanyPostsController extends Controller
 
        if($request->hasFile('image')){
            
-                $img = 'uploads/companyposts/' . time() . '.' . $request->file('image')->extension();
+                $img = 'uploads/companyPosts/' . time() . '.' . $request->file('image')->extension();
                 $request->file('image')->move(public_path('uploads/companyPosts'), $img);
                 $companyPost = CompanyPost::create([
                     'enduser_id' => $userId,

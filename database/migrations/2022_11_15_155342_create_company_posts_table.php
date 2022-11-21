@@ -13,12 +13,13 @@ class CreateCompanyPostsTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('company_posts');
         Schema::create('company_posts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('enduser_id')->nullable()->references('id')->on('end_users')->onDelete('cascade');
             $table->string('image');
-            $table->text('description');
-            $table->string('location');
+            $table->text('description')->nullable();
+            $table->string('location')->nullable();
             $table->timestamps();
         });
     }
