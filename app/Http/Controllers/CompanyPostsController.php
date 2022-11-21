@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CompanyPost;
+use App\Models\EndUser;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
