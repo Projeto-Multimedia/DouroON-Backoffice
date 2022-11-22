@@ -22,7 +22,17 @@ class ProfileAccountController extends Controller
         //
     }
 
-
+    //get profile from user logged in
+    public function getUserLoggedInProfile(Request $request)
+    {
+        $userId = $request->route('user_id');
+        $profile = ProfileAccount::where('end_user_id', $userId)->get()->pluck('id');
+        return response()->json([
+            'status' => 200,
+            'message' => 'success',
+            'data' => $profile[0],
+        ], 200);  
+    }
     public function getProfileAccounts()
     {
         return ProfileAccount::get();

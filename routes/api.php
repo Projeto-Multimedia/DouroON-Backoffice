@@ -51,6 +51,7 @@ Route::group(['prefix' => 'company-posts'], function () {
 
 Route::group(['prefix' => 'profile-accounts'], function () {
     Route::get('/', [ProfileAccountController::class, 'getProfileAccounts']);
+    Route::get('/{user_id}', [ProfileAccountController::class, 'getUserLoggedInProfile']);
     Route::get('/{id}', [ProfileAccountController::class, 'getProfileAccount']);
     Route::get('/{username}/search', [ProfileAccountController::class, 'getProfileAccountByUsername']);
     Route::get('/{id}/user', [ProfileAccountController::class, 'getUserInfo']);
