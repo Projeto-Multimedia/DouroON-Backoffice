@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProfileAccount;
 use App\Models\EndUser;
+use App\Models\UserPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -64,8 +65,8 @@ class ProfileAccountController extends Controller
 
         return $profileAccount;
     }
-    
-    public function getEndUser($id)
+
+    public function getUserInfo($id)
     {
         $profileAccount = ProfileAccount::where('id', $id)->get();
 
@@ -88,5 +89,42 @@ class ProfileAccountController extends Controller
         return $endUser[0];
     }
 
+    public function getUserProfileInfo($id)
+    {
+        $profileAccount = ProfileAccount::where('id', $id)->get();
+
+        if ($profileAccount->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Profile account does not exist',
+            ], 404);
+        }
+
+        $endUser = EndUser::where('id', $profileAccount[0]->end_user_id)->get();
+
+        if ($endUser->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'End user does not exist',
+            ], 404);
+        }
+
+        $userPosts = UserPost::where('enduser_id', $endUser[0]->id)->get();
+
+        if ($userPosts->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User posts do not exist',
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User posts retrieved successfully',
+            'endUser' => $endUser[0],
+            'userPosts' => $userPosts[0],
+        ], 200);
+
+    }
     
 }
