@@ -3,6 +3,7 @@
 use App\Http\Controllers\EndUserController;
 use App\Http\Controllers\UserPostsController;
 use App\Http\Controllers\CompanyPostsController;
+use App\Http\Controllers\ProfileAccountController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -45,4 +46,11 @@ Route::group(['prefix' => 'company-posts'], function () {
     Route::post('/{user_id}/create', [CompanyPostsController::class, 'createPost']);
     Route::post('/{id}/update', [CompanyPostsController::class, 'updatePost']);
     Route::get('/{id}/delete', [CompanyPostsController::class, 'deletePost']);
+});
+
+Route::group(['prefix' => 'profile-accounts'], function () {
+    Route::get('/', [ProfileAccountController::class, 'getProfileAccounts']);
+    Route::get('/{id}', [ProfileAccountController::class, 'getProfileAccount']);
+    Route::get('/{username}/search', [ProfileAccountController::class, 'getProfileAccountByUsername']);
+    Route::get('/{id}/end-user', [ProfileAccountController::class, 'getEndUser']);
 });
