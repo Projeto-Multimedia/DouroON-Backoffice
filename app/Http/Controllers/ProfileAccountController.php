@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProfileAccount;
 use App\Models\EndUser;
+use App\Models\CompanyPost;
 use App\Models\UserPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -124,13 +125,6 @@ class ProfileAccountController extends Controller
 
         $userPosts = UserPost::where('enduser_id', $endUser[0]->id)->where('is_approved', 1)->get();
 
-        if ($userPosts->isEmpty()) {
-            return response()->json([
-                'status' => 404,
-                'message' => 'User posts do not exist',
-            ], 404);
-        }
-        //get the number of posts
         $numberOfPosts = count($userPosts);
         
         return response()->json([
@@ -141,6 +135,43 @@ class ProfileAccountController extends Controller
                 'endUser' => $endUser[0],
                 'numberOfPosts' => $numberOfPosts,
                 'userPosts' => $userPosts,
+            ],
+        ], 200);
+
+    }
+
+    public function getCompanyProfileInfo($id)
+    {
+        $profileAccount = ProfileAccount::select('id', 'biography', 'end_user_id')->where('id', $id)->get();
+
+        if ($profileAccount->isEmpty()) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Profile account does not exist',
+            ], 404);
+        }
+
+        $endUser = EndUser::select('id','avatar', 'name', 'username', 'profile')->where('id', $profileAccount[0]->end_user_id)->get();
+
+        if ($endUser->isEmpty()) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'End user does not exist',
+            ], 404);
+        }
+
+        $companyPosts = CompanyPost::where('enduser_id', $endUser[0]->id)->get();
+
+        $numberOfPosts = count($companyPosts);
+        
+        return response()->json([
+            'status' => 200,
+            'message' => 'User posts retrieved successfully',
+            'data' => [
+                'profileAccount' => $profileAccount[0],
+                'endUser' => $endUser[0],
+                'numberOfPosts' => $numberOfPosts,
+                'CompanyPosts' => $companyPosts,
             ],
         ], 200);
 
