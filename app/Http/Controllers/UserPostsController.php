@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\UserPost;
 use App\Models\EndUser;
+use App\Models\ProfileAccount;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -42,7 +43,7 @@ class UserPostsController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 'error',
+                'status' => 400,
                 'message' => $validator->errors()->first(),
             ], 400);
         }
@@ -58,7 +59,7 @@ class UserPostsController extends Controller
                 ]);
 
                 return response()->json([
-                    'status' => 'success',
+                    'status' => 201,
                     'message' => 'Post created successfully',
                     'data' => $userPost,
                 ], 201);
@@ -113,4 +114,45 @@ class UserPostsController extends Controller
             'data' => $post,
         ], 201); 
     }   
+
+    public function getUserInfoByPost($id)
+    {
+        $post = UserPost::where('id', $id)->get();
+
+        if ($post->isEmpty()) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Post does not exist',
+            ], 404);
+        }
+
+        $user = EndUser::select('username', 'avatar', 'name')->where('id', $post[0]->enduser_id)->get();
+
+        if ($user->isEmpty()) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'User does not exist',
+            ], 404);
+        }   
+
+        $profileAccount = ProfileAccount::select('id')->where('end_user_id', $post[0]->enduser_id)->get();
+
+        if ($profileAccount->isEmpty()) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Profile account does not exist',
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Post, user and profile account retrieved successfully',
+            'data' => [
+                'post' => $post[0],
+                'user' => $user[0],
+                'profile_account' => $profileAccount[0],
+            ],
+        ], 200);
+    }
+
 }

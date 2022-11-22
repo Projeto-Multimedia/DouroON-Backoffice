@@ -34,12 +34,16 @@ class ProfileAccountController extends Controller
 
         if ($profileAccount->isEmpty()) {
             return response()->json([
-                'status' => 'error',
+                'status' => 404,
                 'message' => 'Profile account does not exist',
             ], 404);
         }
 
-        return $profileAccount;
+        return response()->json([
+            'status' => 200,
+            'message' => 'Profile account found',
+            'data' => $profileAccount[0],
+        ], 200);
     }
 
 
@@ -49,7 +53,7 @@ class ProfileAccountController extends Controller
 
         if ($endUser->isEmpty()) {
             return response()->json([
-                'status' => 'error',
+                'status' => 404,
                 'message' => 'End user does not exist',
             ], 404);
         }
@@ -58,35 +62,44 @@ class ProfileAccountController extends Controller
 
         if ($profileAccount->isEmpty()) {
             return response()->json([
-                'status' => 'error',
+                'status' => 404,
                 'message' => 'Profile account does not exist',
             ], 404);
         }
 
-        return $profileAccount;
+        return response()->json([
+            'status' => 200,
+            'message' => 'Profile account found',
+            'data' => $profileAccount[0],
+        ], 200);
     }
 
+    //Info for the search
     public function getUserInfo($id)
     {
         $profileAccount = ProfileAccount::where('id', $id)->get();
 
         if ($profileAccount->isEmpty()) {
             return response()->json([
-                'status' => 'error',
+                'status' => 404,
                 'message' => 'Profile account does not exist',
             ], 404);
         }
         
-        $endUser = EndUser::where('id', $profileAccount[0]->end_user_id)->get();
+        $endUser = EndUser::select('avatar', 'name', 'username')->where('id', $profileAccount[0]->end_user_id)->get();
 
         if ($endUser->isEmpty()) {
             return response()->json([
-                'status' => 'error',
+                'status' => 404,
                 'message' => 'End user does not exist',
             ], 404);
         }
 
-        return $endUser[0];
+        return response()->json([
+            'status' => 200,
+            'message' => 'User info retrieved successfully',
+            'data' => $endUser[0],
+        ], 200);
     }
 
     public function getUserProfileInfo($id)
@@ -95,7 +108,7 @@ class ProfileAccountController extends Controller
 
         if ($profileAccount->isEmpty()) {
             return response()->json([
-                'status' => 'error',
+                'status' => 404,
                 'message' => 'Profile account does not exist',
             ], 404);
         }
@@ -104,7 +117,7 @@ class ProfileAccountController extends Controller
 
         if ($endUser->isEmpty()) {
             return response()->json([
-                'status' => 'error',
+                'status' => 404,
                 'message' => 'End user does not exist',
             ], 404);
         }
@@ -113,13 +126,13 @@ class ProfileAccountController extends Controller
 
         if ($userPosts->isEmpty()) {
             return response()->json([
-                'status' => 'error',
+                'status' => 404,
                 'message' => 'User posts do not exist',
             ], 404);
         }
 
         return response()->json([
-            'status' => 'success',
+            'status' => 200,
             'message' => 'User posts retrieved successfully',
             'endUser' => $endUser[0],
             'userPosts' => $userPosts[0],

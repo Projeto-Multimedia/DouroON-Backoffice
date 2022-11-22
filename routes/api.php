@@ -38,6 +38,7 @@ Route::group(['prefix' => 'user-posts'], function () {
     Route::post('/{user_id}/create', [UserPostsController::class, 'createPost']);
     Route::post('/{id}/update', [UserPostsController::class, 'updatePost']);
     Route::get('/{id}/delete', [UserPostsController::class, 'deletePost']);
+    Route::get('/{id}/user', [UserPostsController::class, 'getUserInfoByPost']);
 });
 
 Route::group(['prefix' => 'company-posts'], function () {
