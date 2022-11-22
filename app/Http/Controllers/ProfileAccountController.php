@@ -104,7 +104,7 @@ class ProfileAccountController extends Controller
 
     public function getUserProfileInfo($id)
     {
-        $profileAccount = ProfileAccount::where('id', $id)->get();
+        $profileAccount = ProfileAccount::select('id', 'biography', 'end_user_id')->where('id', $id)->get();
 
         if ($profileAccount->isEmpty()) {
             return response()->json([
@@ -113,7 +113,7 @@ class ProfileAccountController extends Controller
             ], 404);
         }
 
-        $endUser = EndUser::where('id', $profileAccount[0]->end_user_id)->get();
+        $endUser = EndUser::select('id','avatar', 'name', 'username', 'profile')->where('id', $profileAccount[0]->end_user_id)->get();
 
         if ($endUser->isEmpty()) {
             return response()->json([
@@ -134,8 +134,11 @@ class ProfileAccountController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'User posts retrieved successfully',
-            'endUser' => $endUser[0],
-            'userPosts' => $userPosts[0],
+            'data' => [
+                'profileAccount' => $profileAccount[0],
+                'endUser' => $endUser[0],
+                'userPosts' => $userPosts[0],
+            ],
         ], 200);
 
     }
