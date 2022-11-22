@@ -15,12 +15,12 @@ class UserPostsController extends Controller
 {
     public function index()
     {
-        return UserPost::get();
+        return UserPost::where('is_approved', 1)->get();
     }
 
     public function getPost($id)
     {
-        return UserPost::where('id', $id)->get();
+        return UserPost::where('id', $id)->where('is_approved', 1)->get();
     }
 
     public function createPost(Request $request)
@@ -117,7 +117,7 @@ class UserPostsController extends Controller
 
     public function getUserInfoByPost($id)
     {
-        $post = UserPost::where('id', $id)->get();
+        $post = UserPost::where('id', $id)->where('is_approved', 1)->get();
 
         if ($post->isEmpty()) {
             return response()->json([
