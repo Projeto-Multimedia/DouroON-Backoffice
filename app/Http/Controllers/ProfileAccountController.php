@@ -122,7 +122,7 @@ class ProfileAccountController extends Controller
             ], 404);
         }
 
-        $userPosts = UserPost::where('enduser_id', $endUser[0]->id)->get();
+        $userPosts = UserPost::where('enduser_id', $endUser[0]->id)->where('is_approved', 1)->get();
 
         if ($userPosts->isEmpty()) {
             return response()->json([
@@ -130,14 +130,17 @@ class ProfileAccountController extends Controller
                 'message' => 'User posts do not exist',
             ], 404);
         }
-
+        //get the number of posts
+        $numberOfPosts = count($userPosts);
+        
         return response()->json([
             'status' => 200,
             'message' => 'User posts retrieved successfully',
             'data' => [
                 'profileAccount' => $profileAccount[0],
                 'endUser' => $endUser[0],
-                'userPosts' => $userPosts[0],
+                'numberOfPosts' => $numberOfPosts,
+                'userPosts' => $userPosts,
             ],
         ], 200);
 
