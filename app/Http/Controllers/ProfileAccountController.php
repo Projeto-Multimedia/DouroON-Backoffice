@@ -38,7 +38,7 @@ class ProfileAccountController extends Controller
         return ProfileAccount::get();
     }
 
-    public function getProfileAccount($id)
+    public function getSingleProfileAccount($id)
     {
 
         $profileAccount = ProfileAccount::where('id', $id)->get();
