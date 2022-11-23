@@ -19,6 +19,18 @@ class CompanyFollowersController extends Controller
 
     public function createFollower(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'account_id' => 'required',
+            'account_loggedIn_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Bad request',
+                'data' => $validator->errors(),
+            ], 400);
+        }
 
         $follower = new CompanyFollowers();
         $follower->account_loggedIn_id = $request->accountLoggedIn_id;
