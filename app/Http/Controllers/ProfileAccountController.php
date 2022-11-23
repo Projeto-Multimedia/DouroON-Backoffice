@@ -136,6 +136,14 @@ class ProfileAccountController extends Controller
         $userPosts = UserPost::where('enduser_id', $endUser[0]->id)->where('is_approved', 1)->get();
 
         $numberOfPosts = count($userPosts);
+
+
+        $followers = $profileAccount[0]->followers()->get();
+        $numberOfFollowers = count($followers);
+
+        $following = $profileAccount[0]->following()->get();
+        $numberOfFollowing = count($following);
+
         
         return response()->json([
             'status' => 200,
@@ -144,6 +152,8 @@ class ProfileAccountController extends Controller
                 'profileAccount' => $profileAccount[0],
                 'endUser' => $endUser[0],
                 'numberOfPosts' => $numberOfPosts,
+                'numberOfFollowers' => $numberOfFollowers,
+                'numberOfFollowing' => $numberOfFollowing,
                 'userPosts' => $userPosts,
             ],
         ], 200);

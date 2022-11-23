@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\EndUser;
+use App\Models\UserFollowers;
 
 class ProfileAccount extends Model
 {
@@ -15,6 +17,16 @@ class ProfileAccount extends Model
     public function user()
     {
         return $this->belongsTo(EndUser::class);
+    }
+
+    public function followers()
+    {
+        return $this->hasMany(UserFollowers::class, 'account_id');
+    }
+
+    public function following()
+    {
+        return $this->hasMany(UserFollowers::class, 'account_loggedIn_id');
     }
     
 
