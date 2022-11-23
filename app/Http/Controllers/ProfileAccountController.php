@@ -183,6 +183,12 @@ class ProfileAccountController extends Controller
         $companyPosts = CompanyPost::where('enduser_id', $endUser[0]->id)->get();
 
         $numberOfPosts = count($companyPosts);
+
+        $followers = $profileAccount[0]->Companyfollowers()->get();
+        $numberOfFollowers = count($followers);
+
+        $following = $profileAccount[0]->Companyfollowing()->get();
+        $numberOfFollowing = count($following);
         
         return response()->json([
             'status' => 200,
@@ -190,6 +196,8 @@ class ProfileAccountController extends Controller
             'data' => [
                 'profileAccount' => $profileAccount[0],
                 'endUser' => $endUser[0],
+                'numberOfFollowers' => $numberOfFollowers,
+                'numberOfFollowing' => $numberOfFollowing,
                 'numberOfPosts' => $numberOfPosts,
                 'CompanyPosts' => $companyPosts,
             ],

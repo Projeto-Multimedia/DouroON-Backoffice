@@ -66,3 +66,10 @@ Route::group(['prefix' => 'user-followers'], function () {
     Route::post('/{profile_id}/{accountLoggedIn_id}/', [UserFollowersController::class, 'createFollower']);
     Route::get('/{id}/delete', [UserFollowersController::class, 'deleteFollower']);
 });
+
+Route::group(['prefix' => 'company-followers'], function () {
+    Route::get('/{id}', [CompanyFollowers::class, 'getFollowers']);
+    Route::get('/{id}/following', [CompanyFollowers::class, 'getFollowing']);
+    Route::post('/{profile_id}/{accountLoggedIn_id}/', [CompanyFollowers::class, 'createFollower']);
+    Route::get('/{id}/delete', [CompanyFollowers::class, 'deleteFollower']);
+});
