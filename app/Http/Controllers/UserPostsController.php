@@ -13,9 +13,59 @@ use Illuminate\Support\Str;
 
 class UserPostsController extends Controller
 {
-    public function index()
+    public function getFollowingPosts($user_id)
     {
-        return UserPost::where('is_approved', 1)->get();
+
+        $profile = ProfileAccount::where('end_user_id', $user_id)->get();
+        if ($profile->isEmpty()) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Profile does not exist',
+            ], 404);
+        }
+
+        
+        $following = DB::table('user_followers')->where('account_loggedIn_id', $profile[0]->id)->get();
+
+        if ($following->isEmpty()) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'You are not following anyone',
+            ], 404);
+        }
+        
+        $followingIds = [];
+        $userInfos = [];
+        foreach ($following as $follow) {
+            array_push($followingIds, $follow->account_id);
+            $endUser = ProfileAccount::where('id', $follow->account_id)->pluck('end_user_id');
+            array_push($userInfos, EndUser::select('id', 'avatar', 'username', 'name')->where('id', $endUser[0])->get());
+        }
+
+        $posts = UserPost::where('is_approved', 1)->whereIn('profile_id', $followingIds)->get();
+
+        if ($posts->isEmpty()) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'No posts found',
+            ], 404);
+        }
+
+   //get $post and the respective user info
+        $postsAndUserInfos = [];
+        foreach ($posts as $post) {
+            $post->user_info = $userInfos[array_search($post->profile_id, $followingIds)][0];
+            array_push($postsAndUserInfos, $post);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Posts found',
+            'data' => $postsAndUserInfos,
+        ], 200);
+
+
+
     }
 
     public function getPost($id)
@@ -25,10 +75,10 @@ class UserPostsController extends Controller
 
     public function createPost(Request $request)
     {
-        $userId = $request->route('user_id');
+        $profileId = $request->route('profile_id');
 
-        $validation = Validator::make(['id' => $userId], [
-            'id' => 'required|exists:end_users,id',
+        $validation = Validator::make(['id' => $profileId], [
+            'id' => 'required|exists:profile_accounts,id',
         ]);
 
         if ($validation->fails()) {
@@ -52,7 +102,7 @@ class UserPostsController extends Controller
            
                 $img = $request->hasFile('image');
                 $userPost = UserPost::create([
-                    'enduser_id' => $userId,
+                    'profile_id' => $profileId,
                     'image' => $img,
                     'description' => request('description'),
                     'location' => request('location'),
@@ -114,45 +164,5 @@ class UserPostsController extends Controller
             'data' => $post,
         ], 201); 
     }   
-
-    public function getUserInfoByPost($id)
-    {
-        $post = UserPost::where('id', $id)->where('is_approved', 1)->get();
-
-        if ($post->isEmpty()) {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Post does not exist',
-            ], 404);
-        }
-
-        $user = EndUser::select('username', 'avatar', 'name')->where('id', $post[0]->enduser_id)->get();
-
-        if ($user->isEmpty()) {
-            return response()->json([
-                'status' => 404,
-                'message' => 'User does not exist',
-            ], 404);
-        }   
-
-        $profileAccount = ProfileAccount::select('id')->where('end_user_id', $post[0]->enduser_id)->get();
-
-        if ($profileAccount->isEmpty()) {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Profile account does not exist',
-            ], 404);
-        }
-
-        return response()->json([
-            'status' => 200,
-            'message' => 'Post, user and profile account retrieved successfully',
-            'data' => [
-                'post' => $post[0],
-                'user' => $user[0],
-                'profile_account' => $profileAccount[0],
-            ],
-        ], 200);
-    }
 
 }

@@ -13,6 +13,9 @@ class CreateProfileAccountsTable extends Migration
      */
     public function up()
     {
+        Schema::disableForeignKeyConstraints();
+        Schema::dropIfExists('profile_accounts');
+        Schema::enableForeignKeyConstraints();
         Schema::create('profile_accounts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('end_user_id')->nullable()->references('id')->on('end_users')->onDelete('cascade');

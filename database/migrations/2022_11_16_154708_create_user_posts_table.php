@@ -13,10 +13,12 @@ class CreateUserPostsTable extends Migration
      */
     public function up()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('user_posts');
+        Schema::enableForeignKeyConstraints();
         Schema::create('user_posts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('enduser_id')->nullable()->references('id')->on('end_users')->onDelete('cascade');
+            $table->foreignId('profile_id')->nullable()->references('id')->on('profile_accounts')->onDelete('cascade');
             $table->string('image');
             $table->text('description')->nullable();
             $table->string('location')->nullable();

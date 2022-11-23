@@ -35,18 +35,17 @@ Route::group(['prefix' => 'end-users'], function () {
 });
 
 Route::group(['prefix' => 'user-posts'], function () {
-    Route::get('/', [UserPostsController::class, 'index']);
     Route::get('/{id}', [UserPostsController::class, 'getPost']);
-    Route::post('/{user_id}/create', [UserPostsController::class, 'createPost']);
+    Route::get('/{user_id}/follows', [UserPostsController::class, 'getFollowingPosts']);
+    Route::post('/{profile_id}/create', [UserPostsController::class, 'createPost']);
     Route::post('/{id}/update', [UserPostsController::class, 'updatePost']);
     Route::get('/{id}/delete', [UserPostsController::class, 'deletePost']);
-    Route::get('/{id}/user', [UserPostsController::class, 'getUserInfoByPost']);
 });
 
 Route::group(['prefix' => 'company-posts'], function () {
     Route::get('/', [CompanyPostsController::class, 'index']);
     Route::get('/{id}', [CompanyPostsController::class, 'getPost']);
-    Route::post('/{user_id}/create', [CompanyPostsController::class, 'createPost']);
+    Route::post('/{profile_id}/create', [CompanyPostsController::class, 'createPost']);
     Route::post('/{id}/update', [CompanyPostsController::class, 'updatePost']);
     Route::get('/{id}/delete', [CompanyPostsController::class, 'deletePost']);
 });

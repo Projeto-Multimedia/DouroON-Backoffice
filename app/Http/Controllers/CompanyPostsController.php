@@ -24,10 +24,10 @@ class CompanyPostsController extends Controller
 
     public function createPost(Request $request)
     {
-        $userId = $request->route('user_id');
+        $profileId = $request->route('user_id');
 
-        $validation = Validator::make(['id' => $userId], [
-            'id' => 'required|exists:end_users,id',
+        $validation = Validator::make(['id' => $profileId], [
+            'id' => 'required|exists:profile_account,id',
         ]);
 
         if ($validation->fails()) {
@@ -51,7 +51,7 @@ class CompanyPostsController extends Controller
            
                 $img = $request->hasFile('image');
                 $companyPost = CompanyPost::create([
-                    'enduser_id' => $userId,
+                    'profile_id' => $profileId,
                     'image' => $img,
                     'description' => request('description'),
                     'location' => request('location'),
