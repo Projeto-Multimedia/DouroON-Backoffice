@@ -5,6 +5,7 @@ use App\Http\Controllers\UserPostsController;
 use App\Http\Controllers\CompanyPostsController;
 use App\Http\Controllers\ProfileAccountController;
 use App\Http\Controllers\UserFollowersController;
+use App\Http\Controllers\CompanyFollowersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -68,8 +69,8 @@ Route::group(['prefix' => 'user-followers'], function () {
 });
 
 Route::group(['prefix' => 'company-followers'], function () {
-    Route::get('/{id}', [CompanyFollowers::class, 'getFollowers']);
-    Route::get('/{id}/following', [CompanyFollowers::class, 'getFollowing']);
-    Route::post('/{profile_id}/{accountLoggedIn_id}/', [CompanyFollowers::class, 'createFollower']);
-    Route::get('/{id}/delete', [CompanyFollowers::class, 'deleteFollower']);
+    Route::get('/{id}', [CompanyFollowersController::class, 'getFollowers']);
+    Route::get('/{id}/following', [CompanyFollowersController::class, 'getFollowing']);
+    Route::post('/{profile_id}/{accountLoggedIn_id}/', [CompanyFollowersController::class, 'createFollower']);
+    Route::get('/{id}/delete', [CompanyFollowersController::class, 'deleteFollower']);
 });
