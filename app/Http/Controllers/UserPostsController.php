@@ -71,9 +71,6 @@ class UserPostsController extends Controller
             'message' => 'Posts found',
             'data' => $postInfo,
         ], 200);
-
-
-
     }
 
     public function getPost($id)

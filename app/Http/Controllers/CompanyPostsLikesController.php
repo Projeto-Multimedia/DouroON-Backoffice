@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserPostLikes;
+use App\Models\CompanyPostsLikes;
 use Illuminate\Http\Request;
 
-class UserPostLikesController extends Controller
+class CompanyPostsLikesController extends Controller
 {
-
     public function giveLikeAndUnlike(Request $request)
     {
-        $like = new UserPostLikes();
+        $like = new CompanyPostsLikes();
         $like->post_id = $request->post_id;
         $like->profile_id = $request->profile_id;
 
-        $check = UserPostLikes::where('post_id', $request->post_id)->where('profile_id', $request->profile_id)->get();
+        $check = CompanyPostsLikes::where('post_id', $request->post_id)->where('profile_id', $request->profile_id)->get();
 
         if ($check->isEmpty()) {
 
@@ -26,7 +25,7 @@ class UserPostLikesController extends Controller
 
         } else {
 
-            $like = UserPostLikes::where('post_id', $request->post_id)->where('profile_id', $request->profile_id)->delete();
+            $like = CompanyPostsLikes::where('post_id', $request->post_id)->where('profile_id', $request->profile_id)->delete();
         
             return response()->json([
                 'message' => 'Like removed successfully',
