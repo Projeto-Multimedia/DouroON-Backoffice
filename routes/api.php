@@ -6,6 +6,7 @@ use App\Http\Controllers\CompanyPostsController;
 use App\Http\Controllers\ProfileAccountController;
 use App\Http\Controllers\UserFollowersController;
 use App\Http\Controllers\CompanyFollowersController;
+use App\Http\Controllers\UserPostLikesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -65,4 +66,8 @@ Route::group(['prefix' => 'user-followers'], function () {
     Route::get('/{id}/following', [UserFollowersController::class, 'getFollowing']);
     Route::post('/{profile_id}/{accountLoggedIn_id}/', [UserFollowersController::class, 'createFollower']);
     Route::get('/{id}/delete', [UserFollowersController::class, 'deleteFollower']);
+});
+
+Route::group(['prefix' => 'user-post-likes'], function () {
+    Route::post('/{post_id}/{profile_id}/like', [UserPostLikesController::class, 'giveLikeAndUnlike']);
 });

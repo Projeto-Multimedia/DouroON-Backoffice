@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserPost;
+use App\Models\UserPostLikes;
 use App\Models\EndUser;
 use App\Models\ProfileAccount;
 use DB;
@@ -44,6 +45,13 @@ class UserPostsController extends Controller
 
         $posts = UserPost::where('is_approved', 1)->whereIn('profile_id', $followingIds)->get();
 
+        $postLikes = [];
+        foreach ($posts as $post) {
+            $likes = UserPostLikes::where('post_id', $post->id)->get();
+            $countlikes = count($likes);
+            array_push($postLikes, $countlikes);
+        }
+
         if ($posts->isEmpty()) {
             return response()->json([
                 'status' => 404,
@@ -51,17 +59,17 @@ class UserPostsController extends Controller
             ], 404);
         }
 
-   //get $post and the respective user info
-        $postsAndUserInfos = [];
+        $postInfo = [];
         foreach ($posts as $post) {
             $post->user_info = $userInfos[array_search($post->profile_id, $followingIds)][0];
-            array_push($postsAndUserInfos, $post);
+            $post->likes = $postLikes[array_search($post->id, array_column($postLikes, 'post_id'))];
+            array_push($postInfo, $post);
         }
 
         return response()->json([
             'status' => 200,
             'message' => 'Posts found',
-            'data' => $postsAndUserInfos,
+            'data' => $postInfo,
         ], 200);
 
 
