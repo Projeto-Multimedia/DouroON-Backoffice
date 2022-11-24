@@ -136,7 +136,7 @@ class ProfileAccountController extends Controller
             ], 404);
         }
 
-        $userPosts = UserPost::where('enduser_id', $endUser[0]->id)->where('is_approved', 1)->get();
+        $userPosts = UserPost::where('profile_id', $id)->where('is_approved', 1)->get();
 
         $numberOfPosts = count($userPosts);
 
@@ -183,7 +183,7 @@ class ProfileAccountController extends Controller
             ], 404);
         }
 
-        $companyPosts = CompanyPost::where('enduser_id', $endUser[0]->id)->get();
+        $companyPosts = CompanyPost::where('profile_id', $id)->get();
 
         $numberOfPosts = count($companyPosts);
 
