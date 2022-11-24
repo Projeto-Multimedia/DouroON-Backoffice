@@ -66,11 +66,3 @@ Route::group(['prefix' => 'user-followers'], function () {
     Route::post('/{profile_id}/{accountLoggedIn_id}/', [UserFollowersController::class, 'createFollower']);
     Route::get('/{id}/delete', [UserFollowersController::class, 'deleteFollower']);
 });
-
-//no need for company followers, all followers go to the same table
-// Route::group(['prefix' => 'company-followers'], function () {
-//     Route::get('/{id}', [CompanyFollowersController::class, 'getFollowers']);
-//     Route::get('/{id}/following', [CompanyFollowersController::class, 'getFollowing']);
-//     Route::post('/{profile_id}/{accountLoggedIn_id}/', [CompanyFollowersController::class, 'createFollower']);
-//     Route::get('/{id}/delete', [CompanyFollowersController::class, 'deleteFollower']);
-// });
