@@ -15,6 +15,7 @@ class ProfileAccount extends Model
     protected $table = 'profile_accounts';  
     protected $guarded = ['id'];
 
+
     public function user()
     {
         return $this->belongsTo(EndUser::class);

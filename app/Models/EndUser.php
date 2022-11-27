@@ -61,6 +61,12 @@ class EndUser extends Model
         static::created(function ($endUser) {
             $endUser->profileAccount()->create();
         });
+
+
+        static::created(function ($endUser) {
+            $endUser->profile_id = $endUser->profileAccount->id;
+            $endUser->save();
+        });
     }
 
     //hash password when creating user
