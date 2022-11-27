@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\UserFollowers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UserFollowersController extends Controller
 {
@@ -21,18 +22,6 @@ class UserFollowersController extends Controller
     public function createFollower(Request $request)
     {
 
-        $validator = Validator::make($request->all(), [
-            'account_id' => 'required',
-            'account_loggedIn_id' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 400,
-                'message' => 'Bad request',
-                'data' => $validator->errors(),
-            ], 400);
-        }
         
         $follower = new UserFollowers();
         $follower->account_loggedIn_id = $request->accountLoggedIn_id;
