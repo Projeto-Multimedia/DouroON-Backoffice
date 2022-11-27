@@ -72,7 +72,7 @@ class ProfileAccountController extends Controller
 
         $endUserIds = $endUser->pluck('id');
 
-        $profileAccounts = ProfileAccount::whereIn('end_user_id', $endUserIds)->get();
+        $profileAccounts = ProfileAccount::select('id', 'end_user_id')->whereIn('end_user_id', $endUserIds)->get();
 
         if ($profileAccounts->isEmpty()) {
             return response()->json([
@@ -81,10 +81,16 @@ class ProfileAccountController extends Controller
             ], 404);
         }
 
+        $userInfo = $profileAccounts->map(function ($profileAccount) {
+            $user = EndUser::select('id', 'name', 'username', 'avatar', 'profile')->where('id', $profileAccount->end_user_id)->get();
+            $profileAccount->endUser = $user[0];
+            return $profileAccount;
+        });
+
         return response()->json([
             'status' => 200,
             'message' => 'Profile account found',
-            'data' => $profileAccounts,
+            'data' =>  $userInfo,
         ], 200);
     }
 
