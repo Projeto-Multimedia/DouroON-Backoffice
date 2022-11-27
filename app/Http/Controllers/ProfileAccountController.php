@@ -58,11 +58,11 @@ class ProfileAccountController extends Controller
     }
 
 
-    public function getProfileAccountByUsername($username)
+    public function getProfileAccountByUsername($username, $accountLoggedIn_id)
     {
 
         $endUser = EndUser::where('username', 'LIKE', '%' . $username . '%')->get();
-      
+
         if ($endUser->isEmpty()) {
             return response()->json([
                 'status' => 404,
@@ -70,16 +70,17 @@ class ProfileAccountController extends Controller
             ], 404);
         }
 
+
         $endUserIds = $endUser->pluck('id');
 
-        $profileAccounts = ProfileAccount::select('id', 'end_user_id')->whereIn('end_user_id', $endUserIds)->get();
+        $profileAccounts = ProfileAccount::select('id', 'end_user_id')->where('id', '!=', $accountLoggedIn_id)->whereIn('end_user_id', $endUserIds)->get();
 
         if ($profileAccounts->isEmpty()) {
             return response()->json([
                 'status' => 404,
                 'message' => 'Profile account does not exist',
             ], 404);
-        }
+        } 
 
         $userInfo = $profileAccounts->map(function ($profileAccount) {
             $user = EndUser::select('id', 'name', 'username', 'avatar', 'profile')->where('id', $profileAccount->end_user_id)->get();
