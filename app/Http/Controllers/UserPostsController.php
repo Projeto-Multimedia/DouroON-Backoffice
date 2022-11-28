@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserPost;
+use App\Models\UserPostLikes;
 use App\Models\EndUser;
+use App\Models\ProfileAccount;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -12,22 +14,76 @@ use Illuminate\Support\Str;
 
 class UserPostsController extends Controller
 {
-    public function index()
+    public function getFollowingPosts($user_id)
     {
-        return UserPost::get();
+
+        $profile = ProfileAccount::where('end_user_id', $user_id)->get();
+        if ($profile->isEmpty()) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Profile does not exist',
+            ], 404);
+        }
+
+        
+        $following = DB::table('user_followers')->where('account_loggedIn_id', $profile[0]->id)->get();
+
+        if ($following->isEmpty()) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'You are not following anyone',
+            ], 404);
+        }
+        
+        $followingIds = [];
+        $userInfos = [];
+        foreach ($following as $follow) {
+            array_push($followingIds, $follow->account_id);
+            $endUser = ProfileAccount::where('id', $follow->account_id)->pluck('end_user_id');
+            array_push($userInfos, EndUser::select('id', 'avatar', 'username', 'name')->where('id', $endUser[0])->get());
+        }
+
+        $posts = UserPost::where('is_approved', 1)->whereIn('profile_id', $followingIds)->get();
+
+        $postLikes = [];
+        foreach ($posts as $post) {
+            $likes = UserPostLikes::where('post_id', $post->id)->get();
+            $countlikes = count($likes);
+            array_push($postLikes, $countlikes);
+        }
+
+        if ($posts->isEmpty()) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'No posts found',
+            ], 404);
+        }
+
+        $postInfo = [];
+        foreach ($posts as $post) {
+            $post->user_info = $userInfos[array_search($post->profile_id, $followingIds)][0];
+            $post->likes = $postLikes[array_search($post->id, array_column($postLikes, 'post_id'))];
+            array_push($postInfo, $post);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Posts found',
+            'data' => $postInfo,
+        ], 200);
     }
 
     public function getPost($id)
     {
-        return UserPost::where('id', $id)->get();
+        return UserPost::where('id', $id)->where('is_approved', 1)->get();
     }
 
     public function createPost(Request $request)
     {
-        $userId = $request->route('user_id');
+        $profileId = $request->route('profile_id');
 
-        $validation = Validator::make(['id' => $userId], [
-            'id' => 'required|exists:end_users,id',
+        $validation = Validator::make(['id' => $profileId], [
+            'id' => 'required|exists:profile_accounts,id',
         ]);
 
         if ($validation->fails()) {
@@ -42,7 +98,7 @@ class UserPostsController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 'error',
+                'status' => 400,
                 'message' => $validator->errors()->first(),
             ], 400);
         }
@@ -51,14 +107,14 @@ class UserPostsController extends Controller
            
                 $img = $request->hasFile('image');
                 $userPost = UserPost::create([
-                    'enduser_id' => $userId,
+                    'profile_id' => $profileId,
                     'image' => $img,
                     'description' => request('description'),
                     'location' => request('location'),
                 ]);
 
                 return response()->json([
-                    'status' => 'success',
+                    'status' => 201,
                     'message' => 'Post created successfully',
                     'data' => $userPost,
                 ], 201);
@@ -113,4 +169,5 @@ class UserPostsController extends Controller
             'data' => $post,
         ], 201); 
     }   
+
 }

@@ -21,7 +21,7 @@ class EndUserController extends Controller
         $validator = Validator::make(request()->all(), [
             'name' => 'required|min:8|max:70',
             'email' => 'required|email|unique:end_users',
-            'password' => 'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+            'password' => 'required|min:8|max:30',
             'username' => 'required|alpha_num|min:8|max:20|unique:end_users',
         ]);
 

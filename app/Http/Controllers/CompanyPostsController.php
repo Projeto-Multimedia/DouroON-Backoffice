@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CompanyPost;
 use App\Models\EndUser;
+use App\Models\CompanyPostsLikes;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -12,9 +13,33 @@ use Illuminate\Support\Str;
 
 class CompanyPostsController extends Controller
 {
-    public function index()
+    public function allCompanyPosts()
     {
-        return CompanyPost::get();
+        $posts = CompanyPost::get();
+
+        if ($posts->isEmpty()) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'No posts found',
+            ], 404);
+        }
+
+        $postLikes = [];
+        foreach ($posts as $post) {
+            $likes = CompanyPostsLikes::where('post_id', $post->id)->get();
+            $countlikes = count($likes);
+            array_push($postLikes, $countlikes);
+        }
+
+        $posts->map(function ($post, $key) use ($postLikes) {
+            $post->likes = $postLikes[$key];
+        });
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Posts found',
+            'data' => $posts,
+        ], 200);
     }
 
     public function getPost($id)
@@ -24,10 +49,10 @@ class CompanyPostsController extends Controller
 
     public function createPost(Request $request)
     {
-        $userId = $request->route('user_id');
+        $profileId = $request->profile_id;
 
-        $validation = Validator::make(['id' => $userId], [
-            'id' => 'required|exists:end_users,id',
+        $validation = Validator::make(['id' => $profileId], [
+            'id' => 'required|exists:profile_accounts,id',
         ]);
 
         if ($validation->fails()) {
@@ -51,7 +76,7 @@ class CompanyPostsController extends Controller
            
                 $img = $request->hasFile('image');
                 $companyPost = CompanyPost::create([
-                    'enduser_id' => $userId,
+                    'profile_id' => $profileId,
                     'image' => $img,
                     'description' => request('description'),
                     'location' => request('location'),

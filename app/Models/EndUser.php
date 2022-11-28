@@ -5,6 +5,8 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\UserPost;
+use App\Models\EndUser;
+use App\Models\ProfileAccount;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -48,12 +50,22 @@ class EndUser extends Model
 
     }
 
-    //Generate random token when creating user
+
     public static function boot()
     {
         parent::boot();
         static::creating(function ($model) {
             $model->token = Str::random(60);
+        });
+
+        static::created(function ($endUser) {
+            $endUser->profileAccount()->create();
+        });
+
+
+        static::created(function ($endUser) {
+            $endUser->profile_id = $endUser->profileAccount->id;
+            $endUser->save();
         });
     }
 
@@ -81,6 +93,14 @@ class EndUser extends Model
         return $this->posts()->where('enduser_id', $id)->get();
     }
 
+    //Get the profile account for the user.
+    public function profileAccount()
+    {
+        return $this->hasOne(ProfileAccount::class);
+    }
+
+
+  
 
 
     /*
