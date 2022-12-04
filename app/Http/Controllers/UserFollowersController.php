@@ -32,19 +32,23 @@ class UserFollowersController extends Controller
             ->first();
 
         if ($checkFollower) {
+            $checkFollower->delete();
             return response()->json([
-                'message' => 'You are already following this user',
-            ], 400);
+                'message' => 'You have unfollowed this user',
+                'status' => 200
+            ]);
         }
         else if ($follower->account_loggedIn_id != $follower->account_id) {
             $follower->save();
             return response()->json([
+                'status' => 200,
                 'message' => 'You are now following this user',
                 'follower' => $follower
             ], 200);
         } 
         else {
             return response()->json([
+                'status' => 400,
                 'message' => 'You cannot follow yourself',
             ], 400);
         }    
@@ -55,6 +59,7 @@ class UserFollowersController extends Controller
     {
         $followers = UserFollowers::where('account_id', $id)->get();
         return response()->json([
+            'status' => 200,
             'followers' => $followers
         ], 200);
     }
@@ -64,6 +69,7 @@ class UserFollowersController extends Controller
     {
         $following = UserFollowers::where('account_loggedIn_id', $id)->get();
         return response()->json([
+            'status' => 200,
             'following' => $following
         ], 200);
     }
@@ -78,6 +84,7 @@ class UserFollowersController extends Controller
         if ($follower) {
             $follower->delete();
             return response()->json([
+                'status' => 200,
                 'message' => 'You are no longer following this user',
             ], 200);
         }
