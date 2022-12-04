@@ -8,6 +8,7 @@ use App\Http\Controllers\UserFollowersController;
 use App\Http\Controllers\CompanyFollowersController;
 use App\Http\Controllers\UserPostLikesController;
 use App\Http\Controllers\CompanyPostsLikesController;
+use App\Http\Controllers\UserPostCommentsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -75,4 +76,10 @@ Route::group(['prefix' => 'user-post-likes'], function () {
 
 Route::group(['prefix' => 'company-post-likes'], function () {
     Route::post('/{post_id}/{profile_id}/like', [CompanyPostsLikesController::class, 'giveLikeAndUnlike']);
+});
+
+Route::group(['prefix' => 'user-post-comments'], function () {
+    Route::get('/{post_id}', [UserPostCommentsController::class, 'getComments']);
+    Route::post('/{post_id}/{profile_id}/create', [UserPostCommentsController::class, 'createComment']);
+    Route::get('/{id}/delete', [UserPostCommentsController::class, 'deleteComment']);
 });
