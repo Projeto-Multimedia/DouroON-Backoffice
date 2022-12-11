@@ -6,6 +6,8 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\UserPost;
 use App\Models\EndUser;
+use App\Models\User;
+use Spatie\Permission\Traits\HasRoles;
 use App\Models\ProfileAccount;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -13,6 +15,7 @@ use Illuminate\Support\Str;
 class EndUser extends Model
 {
     use CrudTrait;
+    use HasRoles;
 
     /*
     |--------------------------------------------------------------------------
@@ -66,6 +69,13 @@ class EndUser extends Model
         static::created(function ($endUser) {
             $endUser->profile_id = $endUser->profileAccount->id;
             $endUser->save();
+            $user = User::create([
+                'name' => $endUser->name,
+                'email' => $endUser->email,
+                'password' => $endUser->password,
+            ]);
+
+            $user->assignRole('company');
         });
     }
 

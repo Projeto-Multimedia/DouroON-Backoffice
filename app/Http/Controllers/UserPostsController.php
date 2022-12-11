@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\UserPost;
 use App\Models\UserPostLikes;
+use App\Models\UserPostComments;
 use App\Models\EndUser;
 use App\Models\ProfileAccount;
 use DB;
@@ -52,6 +53,13 @@ class UserPostsController extends Controller
             array_push($postLikes, $countlikes);
         }
 
+        $postComments = [];
+        foreach ($posts as $post) {
+            $comments = UserPostComments::where('post_id', $post->id)->get();
+            $countComments = count($comments);
+            array_push($postComments, $countComments);
+        }
+
         if ($posts->isEmpty()) {
             return response()->json([
                 'status' => 404,
@@ -60,9 +68,27 @@ class UserPostsController extends Controller
         }
 
         $postInfo = [];
+        
         foreach ($posts as $post) {
             $post->user_info = $userInfos[array_search($post->profile_id, $followingIds)][0];
-            $post->likes = $postLikes[array_search($post->id, array_column($postLikes, 'post_id'))];
+
+            if($postLikes != null){
+                $post->likes = $postLikes[array_search($post->id, $posts->pluck('id')->toArray())];
+            } 
+            else {
+                $post->likes = 0;
+            }
+
+            if($postComments != null){
+                $post->comments = $postComments[array_search($post->id, $posts->pluck('id')->toArray())];
+                $post->commentsText = UserPostComments::select('comment')->where('post_id', $post->id)->get();
+
+            } 
+            else{
+                $post->comments = 0;
+                $post->commentsText = [];
+            }
+            
             array_push($postInfo, $post);
         }
 
