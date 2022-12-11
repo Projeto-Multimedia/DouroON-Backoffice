@@ -5,7 +5,6 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\UserPost;
-use App\Models\EndUser;
 use App\Models\User;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\ProfileAccount;
