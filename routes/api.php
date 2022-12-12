@@ -68,11 +68,13 @@ Route::group(['prefix' => 'user-followers'], function () {
     Route::get('/{id}/following', [UserFollowersController::class, 'getFollowing']);
     Route::post('/{profile_id}/{accountLoggedIn_id}/', [UserFollowersController::class, 'createFollower']);
     Route::get('/{id}/delete', [UserFollowersController::class, 'deleteFollower']);
+    Route::post('/{post_id}/{profile_id}/like', [UserPostLikesController::class, 'giveLikeAndUnlike']);
+    Route::post('/{post_id}/{profile_id}/comment', [UserPostCommentsController::class, 'createComment']);
 });
 
-Route::group(['prefix' => 'user-post-likes'], function () {
-    Route::post('/{post_id}/{profile_id}/like', [UserPostLikesController::class, 'giveLikeAndUnlike']);
-});
+// Route::group(['prefix' => 'user-post-likes'], function () {
+//     Route::post('/{post_id}/{profile_id}/like', [UserPostLikesController::class, 'giveLikeAndUnlike']);
+// });
 
 Route::group(['prefix' => 'company-post-likes'], function () {
     Route::post('/{post_id}/{profile_id}/like', [CompanyPostsLikesController::class, 'giveLikeAndUnlike']);
@@ -80,6 +82,6 @@ Route::group(['prefix' => 'company-post-likes'], function () {
 
 Route::group(['prefix' => 'user-post-comments'], function () {
     Route::get('/{post_id}', [UserPostCommentsController::class, 'getComments']);
-    Route::post('/{post_id}/{profile_id}/create', [UserPostCommentsController::class, 'createComment']);
+    // Route::post('/{post_id}/{profile_id}/comment', [UserPostCommentsController::class, 'createComment']);
     Route::get('/{id}/delete', [UserPostCommentsController::class, 'deleteComment']);
 });
