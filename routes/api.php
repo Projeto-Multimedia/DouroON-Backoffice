@@ -9,6 +9,8 @@ use App\Http\Controllers\CompanyFollowersController;
 use App\Http\Controllers\UserPostLikesController;
 use App\Http\Controllers\CompanyPostsLikesController;
 use App\Http\Controllers\UserPostCommentsController;
+use App\Http\Controllers\UserMessagesController;
+use App\Http\Controllers\UserConversationsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -85,4 +87,18 @@ Route::group(['prefix' => 'user-post-comments'], function () {
     Route::get('/{post_id}', [UserPostCommentsController::class, 'getComments']);
     // Route::post('/{post_id}/{profile_id}/comment', [UserPostCommentsController::class, 'createComment']);
     Route::get('/{id}/delete', [UserPostCommentsController::class, 'deleteComment']);
+});
+
+Route::group(['prefix' => 'user-conversations'], function () {
+    Route::post('/{user_one}/{user_two}/start-conversation', [UserConversationsController::class, 'startConversation']);
+    Route::get('/{id}/get-conversation', [UserConversationsController::class, 'getConversation']);
+    Route::get('/{user_id}/get-conversations', [UserConversationsController::class, 'getAllUserConversations']);
+    Route::get('/{id}/delete-conversation', [UserConversationsController::class, 'deleteConversation']);
+});
+
+Route::group(['prefix' => 'user-messages'], function () {
+    Route::post('/{conversation_id}/{sender_id}/send-message', [UserMessagesController::class, 'sendMessage']);
+    Route::get('/{conversation_id}/get-messages', [UserMessagesController::class, 'getConversationMessages']);
+    Route::get('/{conversation_id}/get-messages-pagination', [UserMessagesController::class, 'getConversationMessagesWithPagination']);
+    Route::get('/{id}/delete-message', [UserMessagesController::class, 'deleteMessage']);
 });
