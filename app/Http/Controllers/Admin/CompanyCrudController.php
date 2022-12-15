@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\EndUserRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Support\Facades\Hash;
+use App\Traits\DenyAccessTrait;
 
 /**
  * Class EndUserCrudController
@@ -18,6 +20,7 @@ class CompanyCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use DenyAccessTrait;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -30,6 +33,7 @@ class CompanyCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/companies');
         CRUD::setEntityNameStrings('company', 'companies');
         $this->crud->addClause('where', 'profile', '!=', 'user');
+        $this->setupAdminViewAccess();
     }
 
     /**

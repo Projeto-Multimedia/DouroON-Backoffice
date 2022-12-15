@@ -6,7 +6,7 @@ trait DenyAccessTrait
 {
     protected function setupAccess()
     {
-        if (!backpack_user()->hasRole('admin')) {
+        if (!backpack_user()->hasRole('admin') || !backpack_user()->hasRole('moderator')) {
             $this->crud->denyAccess('create');
             $this->crud->denyAccess('update');
             $this->crud->denyAccess('delete');
@@ -15,6 +15,15 @@ trait DenyAccessTrait
     }
 
     protected function setupViewAccess()
+    {
+        if (!backpack_user()->hasRole('admin') && !backpack_user()->hasRole('moderator')) {
+            $this->crud->denyAccess('list');
+            $this->crud->denyAccess('show');
+        }
+        
+    }
+
+    protected function setupAdminViewAccess()
     {
         if (!backpack_user()->hasRole('admin')) {
             $this->crud->denyAccess('list');
@@ -31,8 +40,7 @@ trait DenyAccessTrait
     protected function setupDeny()
     {
             $this->crud->denyAccess('create');
-            $this->crud->denyAccess('update');
-            $this->crud->denyAccess('delete');   
+            $this->crud->denyAccess('update'); 
     }
 
     protected function RemoveActionColumn()

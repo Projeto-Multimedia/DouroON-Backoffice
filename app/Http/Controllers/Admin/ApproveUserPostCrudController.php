@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\UserPostRequest;
+use App\Traits\DenyAccessTrait;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -18,7 +19,7 @@ class ApproveUserPostCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
-
+    use DenyAccessTrait;
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
      * 
@@ -29,6 +30,7 @@ class ApproveUserPostCrudController extends CrudController
         CRUD::setModel(\App\Models\UserPost::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/approve-post');
         CRUD::setEntityNameStrings('user post', 'Approve user posts');
+        $this->setupViewAccess();
         $this->crud->denyAccess('create');
         $this->crud->addClause('where', 'is_approved', '!=', 1);
     }
