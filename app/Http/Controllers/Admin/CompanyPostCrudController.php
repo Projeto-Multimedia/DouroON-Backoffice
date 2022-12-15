@@ -29,6 +29,12 @@ class CompanyPostCrudController extends CrudController
         CRUD::setModel(\App\Models\CompanyPost::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/company-post');
         CRUD::setEntityNameStrings('company post', 'company posts');
+        
+        if(backpack_user()->hasRole('company')){
+            $this->crud->addClause('whereHas', 'companyInfo', function($query) {
+                $query->where('username', backpack_user()->name);
+            });
+        }
     }
 
     /**

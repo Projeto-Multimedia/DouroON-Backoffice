@@ -69,7 +69,7 @@ class EndUser extends Model
             $endUser->profile_id = $endUser->profileAccount->id;
             $endUser->save();
             $user = User::create([
-                'name' => $endUser->name,
+                'name' => $endUser->username,
                 'email' => $endUser->email,
                 'password' => $endUser->password,
             ]);
