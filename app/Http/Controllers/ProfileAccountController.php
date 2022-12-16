@@ -107,7 +107,7 @@ class ProfileAccountController extends Controller
             ], 404);
         }
         
-        $endUser = EndUser::select('avatar', 'name', 'username')->where('id', $profileAccount[0]->end_user_id)->get();
+        $endUser = EndUser::select('avatar', 'name', 'username', 'profile')->where('id', $profileAccount[0]->end_user_id)->get();
 
         if ($endUser->isEmpty()) {
             return response()->json([
