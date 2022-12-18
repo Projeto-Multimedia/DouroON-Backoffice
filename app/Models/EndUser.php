@@ -62,18 +62,16 @@ class EndUser extends Model
 
         static::created(function ($endUser) {
             $endUser->profileAccount()->create();
-        });
-
-
-        static::created(function ($endUser) {
             $endUser->profile_id = $endUser->profileAccount->id;
             $endUser->save();
             $user = User::create([
-                'name' => $endUser->username,
+                'name' => $endUser->name,
                 'email' => $endUser->email,
                 'password' => $endUser->password,
             ]);
-
+            $user->username = $endUser->username;
+            $user->profile_id = $endUser->profile_id;
+            $user->save();
             $user->assignRole('company');
         });
     }
