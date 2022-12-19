@@ -71,6 +71,7 @@ class EndUser extends Model
             ]);
             $user->username = $endUser->username;
             $user->profile_id = $endUser->profile_id;
+            $user->avatar = $endUser->avatar;
             $user->save();
             $user->assignRole('company');
         });

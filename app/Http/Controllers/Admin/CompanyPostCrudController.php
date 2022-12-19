@@ -78,7 +78,13 @@ class CompanyPostCrudController extends CrudController
         CRUD::setValidation(CompanyPostRequest::class);
 
         CRUD::field('profile_id')->type('hidden')->value(backpack_user()->profile_id);
-        CRUD::field('image');
+        CRUD::addField([
+            'name' => 'image',
+            'label' => 'Image',
+            'type' => 'upload',
+            'upload' => true,
+            'disk' => 'uploads',
+        ]);
         CRUD::field('description');
         CRUD::field('location');
 

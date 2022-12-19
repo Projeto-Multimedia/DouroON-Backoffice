@@ -26,6 +26,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'username',
+        'avatar',
     ];
 
     /**
@@ -47,6 +49,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function setAvatarAttribute($value)
+    {
+        $attribute_name = "avatar";
+        $disk = "uploads";
+        $destination_path ="/uploads/avatar";
+
+        $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
+
+    }
 
     public function profile()
     {
