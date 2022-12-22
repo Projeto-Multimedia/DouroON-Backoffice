@@ -164,7 +164,7 @@ class ProfileAccountController extends Controller
                 'numberOfPosts' => $numberOfPosts,
                 'numberOfFollowers' => $numberOfFollowers,
                 'numberOfFollowing' => $numberOfFollowing,
-                'userPosts' => $userPosts,
+                'posts' => $userPosts,
             ],
         ], 200);
 
@@ -202,14 +202,14 @@ class ProfileAccountController extends Controller
         
         return response()->json([
             'status' => 200,
-            'message' => 'User posts retrieved successfully',
+            'message' => 'Company posts retrieved successfully',
             'data' => [
                 'profileAccount' => $profileAccount[0],
                 'endUser' => $endUser[0],
                 'numberOfFollowers' => $numberOfFollowers,
                 'numberOfFollowing' => $numberOfFollowing,
                 'numberOfPosts' => $numberOfPosts,
-                'CompanyPosts' => $companyPosts,
+                'posts' => $companyPosts,
             ],
         ], 200);
 
