@@ -36,6 +36,7 @@ class UserPostsController extends Controller
             ], 404);
         }
         
+        
         $followingIds = [];
         $userInfos = [];
         foreach ($following as $follow) {
@@ -44,7 +45,13 @@ class UserPostsController extends Controller
             array_push($userInfos, EndUser::select('id', 'avatar', 'username', 'name')->where('id', $endUser[0])->get());
         }
 
+        //Get User Logged In Posts Aswell
+        array_push ($followingIds, $profile[0]->id);
+        array_push($userInfos, EndUser::select('id', 'avatar', 'username', 'name')->where('id', $user_id)->get());
+
+        
         $posts = UserPost::where('is_approved', 1)->whereIn('profile_id', $followingIds)->get();
+        $posts = $posts->sortByDesc('created_at');
 
         $postLikes = [];
         foreach ($posts as $post) {

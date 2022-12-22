@@ -62,10 +62,6 @@ class EndUser extends Model
 
         static::created(function ($endUser) {
             $endUser->profileAccount()->create();
-        });
-
-
-        static::created(function ($endUser) {
             $endUser->profile_id = $endUser->profileAccount->id;
             $endUser->save();
             $user = User::create([
@@ -73,7 +69,10 @@ class EndUser extends Model
                 'email' => $endUser->email,
                 'password' => $endUser->password,
             ]);
-
+            $user->username = $endUser->username;
+            $user->profile_id = $endUser->profile_id;
+            $user->avatar = $endUser->avatar;
+            $user->save();
             $user->assignRole('company');
         });
     }

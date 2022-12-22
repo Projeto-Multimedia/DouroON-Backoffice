@@ -29,6 +29,10 @@ class CompanyPostCrudController extends CrudController
         CRUD::setModel(\App\Models\CompanyPost::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/company-post');
         CRUD::setEntityNameStrings('company post', 'company posts');
+        // dd(backpack_user()->profile_id);
+        if(backpack_user()->hasRole('company')){
+            $this->crud->addClause('where', 'profile_id', backpack_user()->profile_id);
+        }
     }
 
     /**
@@ -43,6 +47,7 @@ class CompanyPostCrudController extends CrudController
             'label' => 'Username',
             'name' => 'companyInfo.username',
         ]);
+
         CRUD::addColumn([
             'name' => 'image',
             'label' => 'Image',
@@ -72,8 +77,14 @@ class CompanyPostCrudController extends CrudController
     {
         CRUD::setValidation(CompanyPostRequest::class);
 
-        CRUD::field('enduser_id');
-        CRUD::field('image');
+        CRUD::field('profile_id')->type('hidden')->value(backpack_user()->profile_id);
+        CRUD::addField([
+            'name' => 'image',
+            'label' => 'Image',
+            'type' => 'upload',
+            'upload' => true,
+            'disk' => 'uploads',
+        ]);
         CRUD::field('description');
         CRUD::field('location');
 

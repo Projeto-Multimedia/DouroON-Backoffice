@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\EndUser;
 
 class CompanyPost extends Model
 {
@@ -51,7 +52,7 @@ class CompanyPost extends Model
         //Get end company info
     public function companyInfo()
     {
-        return $this->hasOne(EndUser::class, 'id', 'enduser_id');
+        return $this->hasOne(EndUser::class, 'profile_id', 'profile_id');
     }
     /*
     |--------------------------------------------------------------------------

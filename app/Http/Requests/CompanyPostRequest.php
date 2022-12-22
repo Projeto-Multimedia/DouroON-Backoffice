@@ -25,7 +25,10 @@ class CompanyPostRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            // |dimensions:ratio=4/3
+            'image' => 'sometimes|required|image|mimes:jpeg,png,jpg,gif,svg',
+            'location' => 'required|min:5|max:255',
+            'description' => 'required|min:5|max:255',
         ];
     }
 
