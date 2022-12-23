@@ -85,7 +85,7 @@ class ProfileSeeder extends Seeder
             'token' => Str::random(60),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
-            'password' => bcrypt($enduser->password),
+            'password' => $enduser->password,
             'profile' => 'company',
             'profile_id' => $profile->id,
         ]);
@@ -101,7 +101,7 @@ class ProfileSeeder extends Seeder
             'email_verified_at' => Carbon::now(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
-            'password' => bcrypt($user->password),
+            'password' => $user->password,
             'profile_id' => $profile->id,
         ]);
     }
