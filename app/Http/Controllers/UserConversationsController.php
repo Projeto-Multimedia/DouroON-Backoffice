@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Conversation;
 use Illuminate\Http\Request;
+use App\Models\EndUser;
+use App\Models\ProfileAccount;
 
 class UserConversationsController extends Controller
 {
@@ -71,6 +73,14 @@ class UserConversationsController extends Controller
                 'status' => 404,
                 'message' => 'No conversations found',
             ], 404);
+        }
+
+        foreach ($conversations as $conversation) {
+            if ($conversation->user_one == $user_id) {
+                $conversation->other_user = EndUser::select('id', 'avatar', 'name')->where('id', $conversation->user_two)->first();
+            } else {
+                $conversation->other_user = EndUser::select('id', 'avatar', 'name')->where('id', $conversation->user_one)->first();
+            }
         }
 
         return response()->json([
