@@ -52,7 +52,7 @@ class UserPost extends Model
     //Get end user info
     public function userInfo()
     {
-        return $this->hasOne(EndUser::class, 'id', 'enduser_id');
+        return $this->hasOne(EndUser::class, 'profile_id', 'profile_id');
     }
 
     /*
