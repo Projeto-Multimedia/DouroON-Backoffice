@@ -6,6 +6,7 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\UserPost;
 use App\Models\User;
+use App\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\ProfileAccount;
 use Illuminate\Support\Facades\Hash;
@@ -50,6 +51,12 @@ class EndUser extends Model
 
         $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
 
+    }
+
+    //role 
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
     }
 
 

@@ -22,7 +22,7 @@ class RolesSeeder extends Seeder
         DB::table('roles')->insert([
             'id' => '1',
             'name' => 'admin',
-            'guard_name' => 'backpack',
+            'guard_name' => 'web',
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
 
@@ -30,7 +30,7 @@ class RolesSeeder extends Seeder
         DB::table('roles')->insert([
             'id' => '2',
             'name' => 'moderator',
-            'guard_name' => 'backpack',
+            'guard_name' => 'web',
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
 
@@ -38,7 +38,7 @@ class RolesSeeder extends Seeder
         DB::table('roles')->insert([
             'id' => '3',
             'name' => 'company',
-            'guard_name' => 'backpack',
+            'guard_name' => 'web',
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
 
