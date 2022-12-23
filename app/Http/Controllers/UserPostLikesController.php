@@ -14,6 +14,7 @@ class UserPostLikesController extends Controller
         $like->post_id = $request->post_id;
         $like->profile_id = $request->profile_id;
 
+        $totalLikes = UserPostLikes::where('post_id', $request->post_id)->count();
         $check = UserPostLikes::where('post_id', $request->post_id)->where('profile_id', $request->profile_id)->get();
 
         if ($check->isEmpty()) {
@@ -22,6 +23,7 @@ class UserPostLikesController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => 'Post liked',
+                'totalLikes' => $totalLikes + 1
             ], 200);
 
         } else {
@@ -29,8 +31,9 @@ class UserPostLikesController extends Controller
             $like = UserPostLikes::where('post_id', $request->post_id)->where('profile_id', $request->profile_id)->delete();
         
             return response()->json([
+                'status' => 201,
                 'message' => 'Like removed successfully',
-                'like' => $like
+                'totalLikes' => $totalLikes - 1
             ], 201);
         }
     }
