@@ -28,7 +28,14 @@ class CompanyPlace extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+    // public function setImageAttribute($value)
+    // {
+    //     $attribute_name = "image";
+    //     $disk = "uploads";
+    //     $destination_path ="/uploads/companyPosts";
 
+    //     $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
+    // }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

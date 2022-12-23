@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\CompanyPlaces;
 use Illuminate\Http\Request;
+use App\Models\ProfileAccount;
+use App\Models\EndUser;
 
 class CompanyPlacesController extends Controller
 {
@@ -17,69 +19,37 @@ class CompanyPlacesController extends Controller
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+    //get place from location
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function getPlaceByLocation($location)
     {
-        //
-    }
+         $place = CompanyPlaces::where('location', 'LIKE', '%'.$location.'%')->get();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\CompanyPlaces  $companyPlaces
-     * @return \Illuminate\Http\Response
-     */
-    public function show(CompanyPlaces $companyPlaces)
-    {
-        //
-    }
+         if($place->isEmpty()){
+             return response()->json([
+                 'status' => 404,
+                 'message' => 'Place does not exist',
+             ], 404);
+         }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\CompanyPlaces  $companyPlaces
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(CompanyPlaces $companyPlaces)
-    {
-        //
-    }
+         $company = EndUser::select('name')->where('profile_id', $place[0]->profile_id)->get();
+         
+         if($company->isEmpty()){
+             return response()->json([
+                 'status' => 404,
+                 'message' => 'Company does not exist',
+             ], 404);
+         }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\CompanyPlaces  $companyPlaces
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, CompanyPlaces $companyPlaces)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\CompanyPlaces  $companyPlaces
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(CompanyPlaces $companyPlaces)
-    {
-        //
-    }
+         $placeInfo = [
+             'place' => $place[0],
+             'company' => $company[0],
+         ];
+         
+            return response()->json([
+                'status' => 200,
+                'message' => 'Place found',
+                'data' => $placeInfo,
+            ], 200);
+        }
 }

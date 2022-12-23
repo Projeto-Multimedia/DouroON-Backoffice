@@ -9,6 +9,7 @@ use App\Http\Controllers\CompanyFollowersController;
 use App\Http\Controllers\UserPostLikesController;
 use App\Http\Controllers\CompanyPostsLikesController;
 use App\Http\Controllers\UserPostCommentsController;
+use App\Http\Controllers\CompanyPlacesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -85,4 +86,9 @@ Route::group(['prefix' => 'user-post-comments'], function () {
     Route::get('/{post_id}', [UserPostCommentsController::class, 'getComments']);
     // Route::post('/{post_id}/{profile_id}/comment', [UserPostCommentsController::class, 'createComment']);
     Route::get('/{id}/delete', [UserPostCommentsController::class, 'deleteComment']);
+});
+
+//company places 
+Route::group(['prefix' => 'company-places'], function () {
+    Route::get('/{location}/search/', [CompanyPlacesController::class, 'getPlaceByLocation']);
 });
