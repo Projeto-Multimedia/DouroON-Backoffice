@@ -52,4 +52,5 @@ class CompanyPlacesController extends Controller
                 'data' => $placeInfo,
             ], 200);
         }
+        
 }
