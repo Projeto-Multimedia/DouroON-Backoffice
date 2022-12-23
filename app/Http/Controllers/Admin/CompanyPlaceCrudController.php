@@ -29,6 +29,9 @@ class CompanyPlaceCrudController extends CrudController
         CRUD::setModel(\App\Models\CompanyPlace::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/company-place');
         CRUD::setEntityNameStrings('company place', 'company places');
+        if(backpack_user()->hasRole('company')){
+            $this->crud->addClause('where', 'profile_id', backpack_user()->profile_id);
+        }
     }
 
     /**
@@ -42,12 +45,27 @@ class CompanyPlaceCrudController extends CrudController
         CRUD::column('name');
         CRUD::column('address');
         CRUD::column('location');
-        CRUD::column('phone');
+
+        CRUD::addColumn([
+            'label' => 'Phone',
+            'name' => 'phone',
+            'type' => 'phone',
+        ]);
+
         CRUD::column('description');
-        CRUD::column('image');
-        CRUD::column('profile_id');
-        CRUD::column('created_at');
-        CRUD::column('updated_at');
+
+        CRUD::addColumn([
+            'name' => 'image',
+            'label' => 'Image',
+            'type' => 'image',
+            'height' => '40px',
+            'width'  => '40px',
+        ]);
+
+        CRUD::addColumn([
+            'label' => 'Company',
+            'name' => 'companyInfo.name',
+        ]);
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -71,8 +89,15 @@ class CompanyPlaceCrudController extends CrudController
         CRUD::field('location');
         CRUD::field('phone');
         CRUD::field('description');
-        CRUD::field('image');
-        CRUD::field('profile_id');
+        
+        CRUD::field('profile_id')->type('hidden')->value(backpack_user()->profile_id);
+        CRUD::addField([
+            'name' => 'image',
+            'label' => 'Image',
+            'type' => 'upload',
+            'upload' => true,
+            'disk' => 'uploads',
+        ]);
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
