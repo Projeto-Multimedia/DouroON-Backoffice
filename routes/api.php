@@ -91,4 +91,5 @@ Route::group(['prefix' => 'user-post-comments'], function () {
 //company places 
 Route::group(['prefix' => 'company-places'], function () {
     Route::get('/{location}/search/', [CompanyPlacesController::class, 'getPlaceByLocation']);
+    Route::get('/{id}', [CompanyPlacesController::class, 'getPlaceById']);
 });
