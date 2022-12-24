@@ -41,10 +41,17 @@ class CompanyPlacesController extends Controller
              ], 404);
          }
 
-         $placeInfo = [
-             'place' => $place[0],
-             'company' => $company[0],
-         ];
+         $placeInfo = $company->map(function ($item, $key) use ($place) {
+            return [
+                'company_name' => $item->name,
+                'name' => $place[0]->name,
+                'location' => $place[0]->location,
+                'address' => $place[0]->address,
+                'phone' => $place[0]->phone,
+                'email' => $place[0]->email,
+                'description' => $place[0]->description,
+            ];    
+        });
          
             return response()->json([
                 'status' => 200,
