@@ -42,12 +42,12 @@ class UserPostsController extends Controller
         foreach ($following as $follow) {
             array_push($followingIds, $follow->account_id);
             $endUser = ProfileAccount::where('id', $follow->account_id)->pluck('end_user_id');
-            array_push($userInfos, EndUser::select('id', 'avatar', 'username', 'name')->where('id', $endUser[0])->get());
+            array_push($userInfos, EndUser::select('id', 'avatar', 'username', 'name', 'profile')->where('id', $endUser[0])->get());
         }
 
         //Get User Logged In Posts Aswell
         array_push ($followingIds, $profile[0]->id);
-        array_push($userInfos, EndUser::select('id', 'avatar', 'username', 'name')->where('id', $user_id)->get());
+        array_push($userInfos, EndUser::select('id', 'avatar', 'username', 'name', 'profile')->where('id', $user_id)->get());
 
         
         $posts = UserPost::where('is_approved', 1)->whereIn('profile_id', $followingIds)->get();

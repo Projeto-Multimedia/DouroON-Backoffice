@@ -29,7 +29,7 @@ class CompanyPostsController extends Controller
         $userInfos = [];
         foreach ($posts as $post) {
             $endUser = ProfileAccount::where('id', $post->profile_id)->pluck('end_user_id');
-            array_push($userInfos, EndUser::select('id', 'avatar', 'username', 'name')->where('id', $endUser[0])->get());
+            array_push($userInfos, EndUser::select('id', 'avatar', 'username', 'name', 'profile')->where('id', $endUser[0])->get());
         }
 
         $postLikes = [];
