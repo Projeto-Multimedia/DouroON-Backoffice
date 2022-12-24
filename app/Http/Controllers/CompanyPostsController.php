@@ -40,7 +40,7 @@ class CompanyPostsController extends Controller
         }
 
         $posts->map(function ($post, $key) use ($userInfos) {
-            $post->userInfo = $userInfos[$key][0];
+            $post->user_info = $userInfos[$key][0];
         });
         
         $posts->map(function ($post, $key) use ($postLikes) {
