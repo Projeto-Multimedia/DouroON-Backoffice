@@ -23,7 +23,7 @@ class UserPostLikesController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => 'Post liked',
-                'totalLikes' => $totalLikes + 1
+                'isLiked' => true,
             ], 200);
 
         } else {
@@ -33,7 +33,7 @@ class UserPostLikesController extends Controller
             return response()->json([
                 'status' => 201,
                 'message' => 'Like removed successfully',
-                'totalLikes' => $totalLikes - 1
+                'isLiked' => false,
             ], 201);
         }
     }
