@@ -22,7 +22,6 @@ class UserFollowersController extends Controller
     public function createFollower(Request $request)
     {
 
-        
         $follower = new UserFollowers();
         $follower->account_loggedIn_id = $request->accountLoggedIn_id;
         $follower->account_id = $request->profile_id;
@@ -35,7 +34,8 @@ class UserFollowersController extends Controller
             $checkFollower->delete();
             return response()->json([
                 'message' => 'You have unfollowed this user',
-                'status' => 200
+                'status' => 200,
+                'isfollowing' => false
             ]);
         }
         else if ($follower->account_loggedIn_id != $follower->account_id) {
@@ -43,7 +43,7 @@ class UserFollowersController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => 'You are now following this user',
-                'follower' => $follower
+                'isfollowing' => true
             ], 200);
         } 
         else {
