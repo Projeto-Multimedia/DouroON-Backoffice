@@ -10,6 +10,7 @@ use App\Http\Controllers\UserPostLikesController;
 use App\Http\Controllers\CompanyPostsLikesController;
 use App\Http\Controllers\UserPostCommentsController;
 use App\Http\Controllers\CompanyPlacesController;
+use App\Http\Controllers\UserRoutesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -74,22 +75,19 @@ Route::group(['prefix' => 'user-followers'], function () {
     Route::get('/{id}/delete', [UserFollowersController::class, 'deleteFollower']);
 });
 
-// Route::group(['prefix' => 'user-post-likes'], function () {
-//     Route::post('/{post_id}/{profile_id}/like', [UserPostLikesController::class, 'giveLikeAndUnlike']);
-// });
-
-// Route::group(['prefix' => 'company-post-likes'], function () {
-//     Route::post('/{post_id}/{profile_id}/like', [CompanyPostsLikesController::class, 'giveLikeAndUnlike']);
-// });
-
 Route::group(['prefix' => 'user-post-comments'], function () {
     Route::get('/{post_id}', [UserPostCommentsController::class, 'getComments']);
-    // Route::post('/{post_id}/{profile_id}/comment', [UserPostCommentsController::class, 'createComment']);
     Route::get('/{id}/delete', [UserPostCommentsController::class, 'deleteComment']);
 });
 
-//company places 
 Route::group(['prefix' => 'company-places'], function () {
     Route::get('/{location}/search/', [CompanyPlacesController::class, 'getPlaceByLocation']);
     Route::get('/{id}', [CompanyPlacesController::class, 'getPlaceById']);
+});
+
+Route::group(['prefix' => 'user-routes'], function () {
+    Route::get('/{id}', [UserRoutesController::class, 'getRoute']);
+    Route::post('/{profile_id}/create', [UserRoutesController::class, 'createUserRoute']);
+    Route::get('/{profile_id}/routes', [UserRoutesController::class, 'getUserRoutes']);
+    Route::get('/{id}/delete', [UserRoutesController::class, 'deleteUserRoute']);
 });
