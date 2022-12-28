@@ -11,6 +11,7 @@ use App\Http\Controllers\CompanyPostsLikesController;
 use App\Http\Controllers\UserPostCommentsController;
 use App\Http\Controllers\CompanyPlacesController;
 use App\Http\Controllers\UserRoutesController;
+use App\Http\Controllers\SavePlaceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -91,3 +92,8 @@ Route::group(['prefix' => 'user-routes'], function () {
     Route::get('/{profile_id}/routes', [UserRoutesController::class, 'getUserRoutes']);
     Route::get('/{id}/delete', [UserRoutesController::class, 'deleteUserRoute']);
 });
+
+Route::group(['prefix' => 'save-places'], function () {
+    Route::post('/{profile_id}/save', [SavePlaceController::class, 'savePlace']);
+});
+    

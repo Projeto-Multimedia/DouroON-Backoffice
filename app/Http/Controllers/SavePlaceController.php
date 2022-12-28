@@ -4,82 +4,47 @@ namespace App\Http\Controllers;
 
 use App\Models\SavePlace;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SavePlaceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    
+    public function savePlace(Request $request)
     {
-        //
-    }
+        //validate request
+        $validator = Validator::make($request->all(), [
+            'place_id' => 'required|exists:company_places,id',
+            'route_id' => 'required|exists:user_routes,id',
+        ]);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 400,
+                'message' => $validator->errors()->first(),
+            ], 400);
+        }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $savePlace = new SavePlace();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\SavePlace  $savePlace
-     * @return \Illuminate\Http\Response
-     */
-    public function show(SavePlace $savePlace)
-    {
-        //
-    }
+        // Check if the place is already saved in the route
+        $check = SavePlace::where('profile_id', $request->profile_id)
+        ->where('place_id', $request->place_id)
+        ->where('route_id', $request->route_id)
+        ->first();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\SavePlace  $savePlace
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(SavePlace $savePlace)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\SavePlace  $savePlace
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, SavePlace $savePlace)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\SavePlace  $savePlace
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(SavePlace $savePlace)
-    {
-        //
+        if($check){
+            return response()->json([
+                'status' => 400,
+                'message' => 'This place is already saved in this route',
+            ], 400);
+        }
+        $savePlace->profile_id = $request->profile_id;
+        $savePlace->place_id = $request->place_id;
+        $savePlace->route_id = $request->route_id;
+        $savePlace->save();
+        return response()->json([
+            'status' => 200,
+            'message' => 'You have successfully saved this place in this route',
+        ], 200);
     }
 }
