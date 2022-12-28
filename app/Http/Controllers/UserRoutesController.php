@@ -42,12 +42,12 @@ class UserRoutesController extends Controller
             return $validation->errors();
         }
 
-        $routes = UserRoutes::where('profile_id', $profileId)->get();
+        $routes = UserRoutes::select('id', 'route_name')->where('profile_id', $profileId)->get();
 
         return response()->json([
             'status' => 200,
             'message' => 'Routes found',
-            'routes' => $routes,
+            'data' => $routes,
         ], 200);
     }
 
