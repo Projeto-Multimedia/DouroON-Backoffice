@@ -23,6 +23,7 @@ class CompanyPlacesController extends Controller
 
     public function getPlaceByLocation($location)
     {
+        
          $place = CompanyPlaces::where('location', 'LIKE', '%'.$location.'%')->get();
 
          if($place->isEmpty()){
@@ -31,9 +32,9 @@ class CompanyPlacesController extends Controller
                  'message' => 'Place does not exist',
              ], 404);
          }
-
-         $company = EndUser::select('name')->where('profile_id', $place[0]->profile_id)->get();
          
+         $company = EndUser::select('name')->where('profile_id', $place[0]->profile_id)->get();
+
          if($company->isEmpty()){
              return response()->json([
                  'status' => 404,
@@ -41,20 +42,26 @@ class CompanyPlacesController extends Controller
              ], 404);
          }
 
-         $placeInfo = $company->map(function ($item, $key) use ($place) {
-            return [
-                'company_name' => $item->name,
-                'id' => $place[0]->id,
-                'name' => $place[0]->name,
-                'location' => $place[0]->location,
-                'image' => $place[0]->image,
-            ];    
-        });
+         $allPlacesInfo = [];
+
+         foreach ($place as $key => $value) {
+             $placeInfo = $company->map(function ($item, $key) use ($value) {
+                 return [
+                     'company_name' => $item->name,
+                     'id' => $value->id,
+                     'name' => $value->name,
+                     'location' => $value->location,
+                     'image' => $value->image,
+                 ];    
+             });
+             array_push($allPlacesInfo, $placeInfo[0]);
+            }
+
          
             return response()->json([
                 'status' => 200,
                 'message' => 'Place found',
-                'data' => $placeInfo,
+                'data' => $allPlacesInfo,
             ], 200);
         }
         

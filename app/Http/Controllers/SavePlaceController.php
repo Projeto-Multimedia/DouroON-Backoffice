@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SavePlace;
+use App\Models\CompanyPlaces;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -45,6 +46,30 @@ class SavePlaceController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'You have successfully saved this place in this route',
+        ], 200);
+    }
+
+
+    public function getSavedPlaces(Request $request)
+    {
+        $routeId = $request->route('id');
+
+        $validation = Validator::make(['id' => $routeId], [
+            'id' => 'required|exists:user_routes,id',
+        ]);
+
+        if ($validation->fails()) {
+            return $validation->errors();
+        }
+
+        $savedPlaces = SavePlace::select('place_id')->where('route_id', $routeId)->get();
+        
+        $placeInfo = CompanyPlaces::select('id', 'name', 'location')->whereIn('id', $savedPlaces)->get();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Saved places found',
+            'data' => $placeInfo,
         ], 200);
     }
 }

@@ -95,5 +95,6 @@ Route::group(['prefix' => 'user-routes'], function () {
 
 Route::group(['prefix' => 'save-places'], function () {
     Route::post('/{profile_id}/save', [SavePlaceController::class, 'savePlace']);
+    Route::get('/{id}/saved', [SavePlaceController::class, 'getSavedPlaces']);
 });
     
