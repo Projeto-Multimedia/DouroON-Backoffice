@@ -2,25 +2,22 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\EndUserRequest;
+use App\Http\Requests\CompanyPlaceRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
-use Illuminate\Support\Facades\Hash;
-use App\Traits\DenyAccessTrait;
 
 /**
- * Class EndUserCrudController
+ * Class CompanyPlaceCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class EndUserCrudController extends CrudController
+class CompanyPlaceCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
-    use DenyAccessTrait;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -29,11 +26,12 @@ class EndUserCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\EndUser::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/end-user');
-        CRUD::setEntityNameStrings('end user', 'end users');
-        $this->setupAdminViewAccess();
-        $this->crud->addClause('where', 'profile', '!=', 'company');
+        CRUD::setModel(\App\Models\CompanyPlace::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/company-place');
+        CRUD::setEntityNameStrings('company place', 'company places');
+        if(backpack_user()->hasRole('company')){
+            $this->crud->addClause('where', 'profile_id', backpack_user()->profile_id);
+        }
     }
 
     /**
@@ -44,16 +42,30 @@ class EndUserCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        CRUD::column('name');
+        CRUD::column('address');
+        CRUD::column('location');
+
         CRUD::addColumn([
-            'name' => 'avatar',
-            'label' => 'Avatar',
+            'label' => 'Phone',
+            'name' => 'phone',
+            'type' => 'phone',
+        ]);
+
+        CRUD::column('description');
+
+        CRUD::addColumn([
+            'name' => 'image',
+            'label' => 'Image',
             'type' => 'image',
             'height' => '40px',
             'width'  => '40px',
         ]);
-        CRUD::column('name');
-        CRUD::column('username');
-        CRUD::column('email');
+
+        CRUD::addColumn([
+            'label' => 'Company',
+            'name' => 'companyInfo.name',
+        ]);
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -70,26 +82,23 @@ class EndUserCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(EndUserRequest::class);
+        CRUD::setValidation(CompanyPlaceRequest::class);
 
+        CRUD::field('name');
+        CRUD::field('address');
+        CRUD::field('location');
+        CRUD::field('phone');
+        CRUD::field('description');
+        
+        CRUD::field('profile_id')->type('hidden')->value(backpack_user()->profile_id);
         CRUD::addField([
-            'name' => 'avatar',
-            'label' => 'Avatar',
+            'name' => 'image',
+            'label' => 'Image',
             'type' => 'upload',
             'upload' => true,
             'disk' => 'uploads',
         ]);
-        CRUD::field('name');
-        CRUD::field('username');
-        CRUD::field('email');
-       
-        CRUD::addField([
-            'name' => 'password',
-            'label' => 'Password',
-            'type' => 'password',
-        ]);
-        
-        CRUD::field('token')->type('hidden');
+
         /**
          * Fields can be defined using the fluent syntax or array syntax:
          * - CRUD::field('price')->type('number');

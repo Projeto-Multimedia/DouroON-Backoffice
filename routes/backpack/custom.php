@@ -22,4 +22,5 @@ Route::group([
     Route::crud('approve-post', 'ApproveUserPostCrudController');
     Route::crud('user-post', 'UserPostCrudController');
     Route::crud('company-post', 'CompanyPostCrudController');
+    Route::crud('company-place', 'CompanyPlaceCrudController');
 }); // this should be the absolute last line of this file

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CompanyPost;
 use App\Models\EndUser;
 use App\Models\CompanyPostsLikes;
+use App\Models\ProfileAccount;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -24,6 +25,13 @@ class CompanyPostsController extends Controller
             ], 404);
         }
 
+        //get the info from the user who created the post
+        $userInfos = [];
+        foreach ($posts as $post) {
+            $endUser = ProfileAccount::where('id', $post->profile_id)->pluck('end_user_id');
+            array_push($userInfos, EndUser::select('id', 'avatar', 'username', 'name', 'profile')->where('id', $endUser[0])->get());
+        }
+
         $postLikes = [];
         foreach ($posts as $post) {
             $likes = CompanyPostsLikes::where('post_id', $post->id)->get();
@@ -31,6 +39,10 @@ class CompanyPostsController extends Controller
             array_push($postLikes, $countlikes);
         }
 
+        $posts->map(function ($post, $key) use ($userInfos) {
+            $post->user_info = $userInfos[$key][0];
+        });
+        
         $posts->map(function ($post, $key) use ($postLikes) {
             $post->likes = $postLikes[$key];
         });

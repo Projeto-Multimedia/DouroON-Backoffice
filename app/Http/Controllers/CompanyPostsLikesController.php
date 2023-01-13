@@ -21,6 +21,7 @@ class CompanyPostsLikesController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => 'Post liked',
+                'isLiked' => true,
             ], 200);
 
         } else {
@@ -28,8 +29,9 @@ class CompanyPostsLikesController extends Controller
             $like = CompanyPostsLikes::where('post_id', $request->post_id)->where('profile_id', $request->profile_id)->delete();
         
             return response()->json([
+                'status' => 200,
                 'message' => 'Like removed successfully',
-                'like' => $like
+                'isLiked' => false,
             ], 201);
         }
     }

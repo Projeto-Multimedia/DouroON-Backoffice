@@ -107,7 +107,7 @@ class ProfileAccountController extends Controller
             ], 404);
         }
         
-        $endUser = EndUser::select('avatar', 'name', 'username')->where('id', $profileAccount[0]->end_user_id)->get();
+        $endUser = EndUser::select('avatar', 'name', 'username', 'profile')->where('id', $profileAccount[0]->end_user_id)->get();
 
         if ($endUser->isEmpty()) {
             return response()->json([
@@ -164,7 +164,7 @@ class ProfileAccountController extends Controller
                 'numberOfPosts' => $numberOfPosts,
                 'numberOfFollowers' => $numberOfFollowers,
                 'numberOfFollowing' => $numberOfFollowing,
-                'userPosts' => $userPosts,
+                'posts' => $userPosts,
             ],
         ], 200);
 
@@ -202,14 +202,14 @@ class ProfileAccountController extends Controller
         
         return response()->json([
             'status' => 200,
-            'message' => 'User posts retrieved successfully',
+            'message' => 'Company posts retrieved successfully',
             'data' => [
                 'profileAccount' => $profileAccount[0],
                 'endUser' => $endUser[0],
                 'numberOfFollowers' => $numberOfFollowers,
                 'numberOfFollowing' => $numberOfFollowing,
                 'numberOfPosts' => $numberOfPosts,
-                'CompanyPosts' => $companyPosts,
+                'posts' => $companyPosts,
             ],
         ], 200);
 

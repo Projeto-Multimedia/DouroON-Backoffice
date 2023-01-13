@@ -6,6 +6,7 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\UserPost;
 use App\Models\User;
+use App\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\ProfileAccount;
 use Illuminate\Support\Facades\Hash;
@@ -52,6 +53,12 @@ class EndUser extends Model
 
     }
 
+    //role 
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
 
     public static function boot()
     {
@@ -62,10 +69,6 @@ class EndUser extends Model
 
         static::created(function ($endUser) {
             $endUser->profileAccount()->create();
-        });
-
-
-        static::created(function ($endUser) {
             $endUser->profile_id = $endUser->profileAccount->id;
             $endUser->save();
             $user = User::create([
@@ -73,7 +76,10 @@ class EndUser extends Model
                 'email' => $endUser->email,
                 'password' => $endUser->password,
             ]);
-
+            $user->username = $endUser->username;
+            $user->profile_id = $endUser->profile_id;
+            $user->avatar = $endUser->avatar;
+            $user->save();
             $user->assignRole('company');
         });
     }
