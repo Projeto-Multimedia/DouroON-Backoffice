@@ -9,6 +9,9 @@ use App\Http\Controllers\CompanyFollowersController;
 use App\Http\Controllers\UserPostLikesController;
 use App\Http\Controllers\CompanyPostsLikesController;
 use App\Http\Controllers\UserPostCommentsController;
+use App\Http\Controllers\UserMessagesController;
+use App\Http\Controllers\UserConversationsController;
+=======
 use App\Http\Controllers\CompanyPlacesController;
 use App\Http\Controllers\UserRoutesController;
 use App\Http\Controllers\SavePlaceController;
@@ -81,6 +84,20 @@ Route::group(['prefix' => 'user-post-comments'], function () {
     Route::get('/{id}/delete', [UserPostCommentsController::class, 'deleteComment']);
 });
 
+Route::group(['prefix' => 'user-conversations'], function () {
+    Route::post('/{user_one}/{user_two}/start-conversation', [UserConversationsController::class, 'startConversation']);
+    Route::get('/{id}/get-conversation', [UserConversationsController::class, 'getConversation']);
+    Route::get('/{user_id}/get-conversations', [UserConversationsController::class, 'getAllUserConversations']);
+    Route::get('/{id}/delete-conversation', [UserConversationsController::class, 'deleteConversation']);
+});
+
+Route::group(['prefix' => 'user-messages'], function () {
+    Route::post('/{conversation_id}/{sender_id}/send-message', [UserMessagesController::class, 'sendMessage']);
+    Route::get('/{conversation_id}/get-messages', [UserMessagesController::class, 'getConversationMessages']);
+    Route::get('/{conversation_id}/get-messages-pagination', [UserMessagesController::class, 'getConversationMessagesWithPagination']);
+    Route::get('/{id}/delete-message', [UserMessagesController::class, 'deleteMessage']);
+});
+
 Route::group(['prefix' => 'company-places'], function () {
     Route::get('/{location}/search/', [CompanyPlacesController::class, 'getPlaceByLocation']);
     Route::get('/{id}', [CompanyPlacesController::class, 'getPlaceById']);
@@ -97,4 +114,3 @@ Route::group(['prefix' => 'save-places'], function () {
     Route::post('/{profile_id}/save', [SavePlaceController::class, 'savePlace']);
     Route::get('/{id}/saved', [SavePlaceController::class, 'getSavedPlaces']);
 });
-    
